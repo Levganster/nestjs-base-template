@@ -63,32 +63,34 @@ This template is structured to help you quickly start developing your NestJS app
 
 To get started with this template, follow these steps:
 
-1. **Clone the Repository**: Clone the project repository to your local machine.
+1. **Create Your Repository**: This is a GitHub template repository. Use it to create your own repository by clicking the "Use this template" button on GitHub.
+
+2. **Clone Your Repository**: Clone your newly created repository to your local machine.
 
    ```bash
-   git clone https://github.com/idmaksim/nestjs-base-template.git
+   git clone <your-repository-url>
    ```
 
-2. **Install Dependencies**: Navigate to the project directory and install the necessary dependencies.
+3. **Install Dependencies**: Navigate to the project directory and install the necessary dependencies.
 
    ```bash
-   cd nestjs-base-template
+   cd <your-repository-name>
    npm install
    ```
 
-3. **Set Up Environment Variables**: Create a `.env` file in the root directory and configure your environment variables. Refer to `.env.example` for guidance.
+4. **Set Up Environment Variables**: Create a `.env` file in the root directory and configure your environment variables. Refer to `.env.example` for guidance.
 
-4. **Database Setup**: Ensure your database is running and configured correctly. Use Prisma or TypeORM migrations to set up your database schema.
+5. **Database Setup**: Ensure your database is running and configured correctly. Use Prisma or TypeORM migrations to set up your database schema.
 
-5. **Run the Application**: Start the application in development mode.
+6. **Run the Application**: Start the application in development mode.
 
    ```bash
    npm run start:dev
    ```
 
-6. **Access Swagger Documentation**: Visit `http://localhost:3000/api` to view the automatically generated Swagger documentation.
+7. **Access Swagger Documentation**: Visit `http://localhost:3000/api` to view the automatically generated Swagger documentation.
 
-7. **Explore and Customize**: Explore the codebase, add new features, and customize the template to fit your project needs.
+8. **Explore and Customize**: Explore the codebase, add new features, and customize the template to fit your project needs.
 
 ---
 
