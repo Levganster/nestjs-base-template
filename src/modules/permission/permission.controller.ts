@@ -1,10 +1,10 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionService } from './permission.service';
-import { JwtAuthGuard } from '../auth/guards/auth.guard';
-import { ActiveGuard } from '../auth/guards/active.guard';
-import { PermissionGuard } from '../role-permission/guards/permission.guard';
-import { HasPermissions } from '../role-permission/decorators/permissions.decorator';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { ActiveGuard } from '../../common/guards/active.guard';
+import { PermissionGuard } from '../../common/guards/permission.guard';
+import { HasPermissions } from '../auth/decorators/permissions.decorator';
 import { PermissionEnum } from 'src/common/constants/permission.enum';
 import { PermissionSummary } from 'src/common/swagger/summary/permission.summary';
 

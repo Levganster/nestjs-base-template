@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/auth.guard';
-import { ActiveGuard } from '../auth/guards/active.guard';
-import { PermissionGuard } from '../role-permission/guards/permission.guard';
-import { HasPermissions } from '../role-permission/decorators/permissions.decorator';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { ActiveGuard } from '../../common/guards/active.guard';
+import { PermissionGuard } from '../../common/guards/permission.guard';
+import { HasPermissions } from '../auth/decorators/permissions.decorator';
 import { PermissionEnum } from 'src/common/constants/permission.enum';
 import { RoleSummary } from 'src/common/swagger/summary/role.summary';
 import { RoleCreateDto } from './dto/role-create.dto';
