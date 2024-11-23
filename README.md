@@ -2,72 +2,41 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# 🎉 Welcome to the NestJS Base Template! 🎉
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+🚀 **Kickstart your NestJS journey with this comprehensive template!** 🚀
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This template is designed to provide you with a solid foundation for building scalable and maintainable server-side applications using **NestJS**. It comes packed with essential features to streamline your development process:
 
-## Installation
+- 🔐 **Authentication**: Secure your application with built-in authentication mechanisms.
+- 🛡️ **Role-Based Access Control**: Manage user permissions effortlessly.
+- 🌐 **Internationalization**: Easily support multiple languages and locales.
 
-```bash
-$ npm install
-```
+---
 
-## Running the app
+## ✨ Features ✨
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+- **🔀 Dual ORM Support**:
 
-# production mode
-$ npm run start:prod
-```
+  - **Prisma**: Available in the `master` branch for a modern and intuitive ORM experience.
+  - **TypeORM** (_soon_): Available in the `typeorm` branch for those who prefer a more traditional ORM approach.
 
-## Test
+- **🔐 Secure Authentication**: Implement robust authentication mechanisms to protect your application and user data.
 
-```bash
-# unit tests
-$ npm run test
+- **🛡️ Role-Based Access Control**: Effortlessly manage user roles and permissions to ensure the right access levels.
 
-# e2e tests
-$ npm run test:e2e
+- **🌐 Internationalization Support**: Seamlessly support multiple languages and locales to reach a global audience.
 
-# test coverage
-$ npm run test:cov
-```
+- **📜 Swagger Documentation**: Automatically generated API documentation to help you and your team understand and use the API effectively.
 
-## Support
+- **🛠️ Modular Architecture**: Clean and organized structure to facilitate scalability and maintainability.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **⚡ High Performance**: Optimized for speed and efficiency, ensuring your application runs smoothly.
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Explore these features and more to build a powerful and flexible application with NestJS! 🚀
