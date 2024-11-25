@@ -12,6 +12,11 @@ services:
       - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     build:
@@ -27,7 +32,8 @@ services:
       - REFRESH_SECRET=refresh_secret
       - PORT=3000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
