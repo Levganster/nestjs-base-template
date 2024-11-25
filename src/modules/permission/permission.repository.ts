@@ -20,9 +20,9 @@ export class PermissionRepository {
     }));
   }
 
-  async existsMany(uuids: string[]): Promise<boolean> {
+  async existsMany(ids: string[]): Promise<boolean> {
     const permissionExistsResults = await Promise.all(
-      uuids.map((uuid) => this.existsById(uuid)),
+      ids.map((id) => this.existsById(id)),
     );
     return permissionExistsResults.every((exists) => exists);
   }
