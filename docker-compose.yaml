@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: >
-      sh -c "npx prisma migrate reset --force && npm run start:prod"
+      sh -c "npx prisma migrate reset --force && nest start main"
     ports:
       - '3000:3000'
     environment:
