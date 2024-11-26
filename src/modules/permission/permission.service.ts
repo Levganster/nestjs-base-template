@@ -33,6 +33,14 @@ export class PermissionService {
     return permission;
   }
 
+  async checkPermission(permission: string, roleId: string) {
+    const rolePermissions =
+      await this.permissionRepository.findManyByRoleId(roleId);
+    return rolePermissions.some(
+      (rolePermission) => rolePermission.name === permission,
+    );
+  }
+
   async ensureExistsById(id: string) {
     const exists = await this.permissionRepository.existsById(id);
     if (!exists) {

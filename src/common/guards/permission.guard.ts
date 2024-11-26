@@ -5,15 +5,16 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RolePermissionService } from '../../modules/role-permission/role-permission.service';
+import { PermissionService } from '../../modules/permission/permission.service';
 import { I18nService } from 'nestjs-i18n';
 import { PermissionEnum } from 'src/common/constants/permission.enum';
+import { User } from '../types/user';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly rolesPermissionsService: RolePermissionService,
+    private readonly permissionService: PermissionService,
     private readonly i18n: I18nService,
   ) {}
 
@@ -24,10 +25,10 @@ export class PermissionGuard implements CanActivate {
     if (!requiredPermissions || requiredPermissions.length === 0) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest();
+    const { user }: { user: User } = context.switchToHttp().getRequest();
     const hasAllPermissions = await this.hasPermissions(
       requiredPermissions,
-      user.id,
+      user.roleId,
     );
     if (!hasAllPermissions) {
       throw new ForbiddenException(this.i18n.t('errors.accessDenied'));
@@ -41,7 +42,7 @@ export class PermissionGuard implements CanActivate {
   ): Promise<boolean> {
     const permissionsCheckResults = await Promise.all(
       requiredPermissions.map((permission) =>
-        this.rolesPermissionsService.checkPermission(permission, userId),
+        this.permissionService.checkPermission(permission, userId),
       ),
     );
     return permissionsCheckResults.every((result) => result);

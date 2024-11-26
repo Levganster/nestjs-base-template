@@ -13,6 +13,12 @@ export class PermissionRepository {
     return this.prisma.permission.findUnique({ where: { id } });
   }
 
+  async findManyByRoleId(roleId: string) {
+    return this.prisma.permission.findMany({
+      where: { rolePermissions: { some: { roleId } } },
+    });
+  }
+
   async existsById(id: string): Promise<boolean> {
     return !!(await this.prisma.permission.findUnique({
       where: { id },

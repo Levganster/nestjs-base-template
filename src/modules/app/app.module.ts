@@ -1,12 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
-import path from 'path';
 import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
 import config from 'src/config/config';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
-import { RolePermissionModule } from '../role-permission/role-permission.module';
 import { RoleModule } from '../role/role.module';
 
 @Module({
@@ -29,7 +27,6 @@ import { RoleModule } from '../role/role.module';
     }),
     UsersModule,
     AuthModule,
-    RolePermissionModule,
     RoleModule,
   ],
 })
