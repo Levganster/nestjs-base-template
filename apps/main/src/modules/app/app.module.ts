@@ -4,7 +4,7 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import config from '../../config/config';
 import { AuthModule } from '../auth/auth.module';
 import { LoggerMiddleware } from '@app/common/middlewares/logger.middleware';
-import { TestModule } from '../test/test.module';
+import { PermissionModule } from '@app/permissions';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { TestModule } from '../test/test.module';
       resolvers: [AcceptLanguageResolver],
     }),
     AuthModule,
-    TestModule,
+    PermissionModule,
   ],
 })
 export class AppModule implements NestModule {
