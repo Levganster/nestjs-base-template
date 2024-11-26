@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-base-template",
+  "name": "main",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -12,7 +12,7 @@
     "build": "nest build",
     "seed": "npx prisma db seed",
     "reset": "npx prisma migrate reset --force",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -22,7 +22,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/main/test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -73,7 +73,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -81,7 +81,20 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/role(|/.*)$": "<rootDir>/libs/role/src/$1",
+      "^@app/roles(|/.*)$": "<rootDir>/libs/roles/src/$1",
+      "^@app/permissions(|/.*)$": "<rootDir>/libs/permissions/src/$1",
+      "^@app/users(|/.*)$": "<rootDir>/libs/users/src/$1",
+      "^@app/password(|/.*)$": "<rootDir>/libs/password/src/$1",
+      "^@app/token(|/.*)$": "<rootDir>/libs/token/src/$1"
+    }
   }
 }
