@@ -32,7 +32,14 @@
       "entryFile": "main",
       "sourceRoot": "apps/admin/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/admin/tsconfig.app.json"
+        "tsConfigPath": "apps/admin/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "i18n/**/*",
+            "watchAssets": true,
+            "outDir": "dist"
+        }
+      ]
       }
     },
     "permissions": {

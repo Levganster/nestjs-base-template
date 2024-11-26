@@ -6,6 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { LoggerMiddleware } from '@app/common/middlewares/logger.middleware';
 import { PermissionModule } from 'libs/permissions/src';
 import { PermissionGuard } from '@app/common/guards/permission.guard';
+import { TokenModule } from '@app/token';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { PermissionGuard } from '@app/common/guards/permission.guard';
       resolvers: [AcceptLanguageResolver],
     }),
     AuthModule,
-    PermissionModule,
+    TokenModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -21,4 +21,3 @@ import { PERMISSION_SERVICE } from '@app/common/constants/providers.const';
   imports: [UsersModule],
 })
 export class PermissionModule {}
-``;
