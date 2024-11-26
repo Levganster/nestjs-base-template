@@ -59,6 +59,38 @@ This template is structured to help you quickly start developing your NestJS app
 
 ---
 
+### 📦 Project Structure
+
+- **apps/** - Separate applications
+
+  - **main/** - Main API application
+  - **admin/** - Administrative API
+
+- **libs/** - Shared libraries
+  - **common/** - Common utilities and types
+  - **users/** - Users module
+  - **permissions/** - Permissions module
+  - **token/** - JWT tokens module
+  - **password/** - Password hashing module
+
+---
+
+## 📚 Applications Structure
+
+### Main API (apps/main)
+
+- Primary API application
+- Port: 3000
+- Swagger: http://localhost:3000/api
+
+### Admin API (apps/admin)
+
+- Administrative API
+- Port: 3001
+- Swagger: http://localhost:3001/api
+
+---
+
 ## 🚀 Getting Started
 
 To get started with this template, follow these steps:
@@ -88,7 +120,7 @@ To get started with this template, follow these steps:
    npm run start:dev
    ```
 
-7. **Access Swagger Documentation**: Visit `http://localhost:3000/api` to view the automatically generated Swagger documentation.
+7. **Access Swagger Documentation**: Visit `http://localhost:<3000/3001>/api` to view the automatically generated Swagger documentation.
 
 8. **Explore and Customize**: Explore the codebase, add new features, and customize the template to fit your project needs.
 
