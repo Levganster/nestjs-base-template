@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { PermissionEnum } from '@app/common';
+import { PermissionEnum } from '../../libs/common/src/constants/permission.enum';
 
 export async function seedPermission(prisma: PrismaClient) {
   const permissions = Object.values(PermissionEnum);

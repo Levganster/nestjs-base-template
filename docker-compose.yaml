@@ -23,14 +23,14 @@ services:
       context: .
       dockerfile: Dockerfile
     command: >
-      sh -c "npx prisma migrate reset --force && nest start main"
+      sh -c "npx prisma migrate reset --force && npx concurrently \"nest start main\" \"nest start admin\""
     ports:
       - '3000:3000'
+      - '3001:3001'
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
       - ACCESS_SECRET=access_secret
       - REFRESH_SECRET=refresh_secret
-      - PORT=3000
     depends_on:
       db:
         condition: service_healthy

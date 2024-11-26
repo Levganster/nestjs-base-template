@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { PermissionEnum } from '@app/common';
+import { PermissionEnum } from '../../libs/common/src/constants/permission.enum';
 
 export async function seedRole(prisma: PrismaClient) {
   await createAdmin(prisma);

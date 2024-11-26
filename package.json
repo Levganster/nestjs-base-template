@@ -9,7 +9,7 @@
     "seed": "ts-node prisma/seeds/seed.ts"
   },
   "scripts": {
-    "build": "nest build",
+    "build": "nest build main && nest build admin",
     "seed": "npx prisma db seed",
     "reset": "npx prisma migrate reset --force",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",

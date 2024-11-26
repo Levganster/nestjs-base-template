@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.enableCors();
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3001;
 
   const config = new DocumentBuilder()
     .setTitle('Admin Nest Template')
