@@ -20,7 +20,7 @@ import { RoleModule } from '../role/role.module';
         'en-*': 'en',
       },
       loaderOptions: {
-        path: `./dist/i18n/`,
+        path: `./libs/i18n/`,
         watch: true,
       },
       resolvers: [AcceptLanguageResolver],

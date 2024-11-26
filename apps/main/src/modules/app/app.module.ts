@@ -21,7 +21,7 @@ import { TokenModule } from '@app/token';
         'en-*': 'en',
       },
       loaderOptions: {
-        path: `./dist/i18n/`,
+        path: `./libs/i18n/`,
         watch: true,
       },
       resolvers: [AcceptLanguageResolver],
