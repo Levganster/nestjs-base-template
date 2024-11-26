@@ -2,18 +2,20 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { I18nService } from 'nestjs-i18n';
 import { User } from '../types/user';
 import { PermissionEnum } from '../constants/permission.enum';
-import { PermissionService } from '@app/permissions';
+import { PermissionService } from 'libs/permissions/src';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
+    @Inject('PermissionService')
     private readonly permissionService: PermissionService,
     private readonly i18n: I18nService,
   ) {}

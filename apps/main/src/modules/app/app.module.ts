@@ -4,7 +4,8 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import config from '../../config/config';
 import { AuthModule } from '../auth/auth.module';
 import { LoggerMiddleware } from '@app/common/middlewares/logger.middleware';
-import { PermissionModule } from '@app/permissions';
+import { PermissionModule } from 'libs/permissions/src';
+import { PermissionGuard } from '@app/common/guards/permission.guard';
 
 @Module({
   imports: [

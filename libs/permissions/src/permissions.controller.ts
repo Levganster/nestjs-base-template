@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Inject } from '@nestjs/common';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionService } from './permissions.service';
 import { ActiveGuard } from '@app/common/guards/active.guard';
@@ -13,7 +13,10 @@ import { HasPermissions } from '@app/common/decorators/permissions.decorator';
 @UseGuards(JwtAuthGuard, ActiveGuard, PermissionGuard)
 @Controller('permissions')
 export class PermissionController {
-  constructor(private readonly permissionService: PermissionService) {}
+  constructor(
+    @Inject('PermissionService')
+    private readonly permissionService: PermissionService,
+  ) {}
 
   @Get()
   @HasPermissions(PermissionEnum.PermissionGetAll)
