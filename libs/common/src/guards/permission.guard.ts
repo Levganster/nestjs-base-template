@@ -10,12 +10,13 @@ import { I18nService } from 'nestjs-i18n';
 import { User } from '../types/user';
 import { PermissionEnum } from '../constants/permission.enum';
 import { PermissionService } from 'libs/permissions/src';
+import { PERMISSION_SERVICE } from '../constants/providers.const';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    @Inject('PermissionService')
+    @Inject(PERMISSION_SERVICE)
     private readonly permissionService: PermissionService,
     private readonly i18n: I18nService,
   ) {}

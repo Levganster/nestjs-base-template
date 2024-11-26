@@ -7,6 +7,7 @@ import { PermissionGuard } from '@app/common/guards/permission.guard';
 import { PermissionEnum } from '@app/common/constants/permission.enum';
 import { PermissionsSummary } from '@app/common/swagger/summary/permissions.summary';
 import { HasPermissions } from '@app/common/decorators/permissions.decorator';
+import { PERMISSION_SERVICE } from '@app/common/constants/providers.const';
 
 @ApiTags('Permissions')
 @ApiSecurity('bearer')
@@ -14,7 +15,7 @@ import { HasPermissions } from '@app/common/decorators/permissions.decorator';
 @Controller('permissions')
 export class PermissionController {
   constructor(
-    @Inject('PermissionService')
+    @Inject(PERMISSION_SERVICE)
     private readonly permissionService: PermissionService,
   ) {}
 
