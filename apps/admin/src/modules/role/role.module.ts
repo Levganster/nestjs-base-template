@@ -10,6 +10,6 @@ import { PrismaService } from '@app/common/services/prisma.service';
   controllers: [RoleController],
   providers: [RoleService, PrismaService, RoleRepository],
   exports: [RoleService],
-  imports: [PermissionModule, forwardRef(() => UsersModule)],
+  imports: [PermissionModule, UsersModule],
 })
 export class RoleModule {}
