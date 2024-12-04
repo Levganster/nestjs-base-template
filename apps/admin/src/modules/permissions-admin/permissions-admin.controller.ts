@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards, Inject } from '@nestjs/common';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { PermissionService } from './permissions.service';
+import { PermissionService } from '@app/permissions';
 import { ActiveGuard } from '@app/common/guards/active.guard';
 import { JwtAuthGuard } from '@app/common/guards/auth.guard';
 import { PermissionGuard } from '@app/common/guards/permission.guard';
