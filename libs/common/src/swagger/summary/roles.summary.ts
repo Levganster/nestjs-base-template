@@ -4,4 +4,5 @@ export enum RolesSummary {
   CREATE = 'Creating a role',
   UPDATE = 'Updating a role',
   DELETE = 'Deleting a role',
+  SEARCH = 'Searching roles',
 }

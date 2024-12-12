@@ -1,9 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/swagger';
 import { RoleCreateDto } from './role-create.dto';
-import { IsString } from 'class-validator';
 
-export class RoleUpdateDto {
-  @ApiProperty()
-  @IsString()
-  name: string;
-}
+export class RoleUpdateDto extends PartialType(RoleCreateDto) {}

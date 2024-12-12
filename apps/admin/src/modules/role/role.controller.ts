@@ -24,6 +24,7 @@ import { PermissionEnum } from '@app/common';
 import { ActiveGuard, JwtAuthGuard } from '@app/common';
 import { PermissionGuard } from '@app/common';
 import { RolesSummary } from '@app/common/swagger/summary/roles.summary';
+import { RoleSearchDto } from './dto/role-search.dto';
 
 @ApiSecurity('bearer')
 @UseGuards(JwtAuthGuard, ActiveGuard, PermissionGuard)
@@ -38,22 +39,18 @@ export class RoleController {
     return this.roleService.create(roleDto);
   }
 
+  @Post('search')
+  @HasPermissions(PermissionEnum.RoleSearch)
+  @ApiOperation({ summary: RolesSummary.SEARCH })
+  async search(@Body() dto: RoleSearchDto) {
+    return this.roleService.search(dto);
+  }
+
   @Get(':id')
   @HasPermissions(PermissionEnum.RoleGet)
   @ApiOperation({ summary: RolesSummary.FIND_ONE })
   async findOneById(@Param('id') id: string) {
     return this.roleService.findOneById(id);
-  }
-
-  @Get()
-  @HasPermissions(
-    PermissionEnum.RoleGetAll,
-    PermissionEnum.RolePermissionGetAll,
-    PermissionEnum.PermissionGetAll,
-  )
-  @ApiOperation({ summary: RolesSummary.FIND_ALL })
-  async findAll() {
-    return this.roleService.findAll();
   }
 
   @Patch(':id')

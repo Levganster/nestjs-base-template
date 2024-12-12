@@ -6,6 +6,7 @@ import { RoleCreateDto } from './dto/role-create.dto';
 import { RoleUpdateDto } from './dto/role-update.dto';
 import { PERMISSION_SERVICE } from '@app/common/constants/providers.const';
 import { RoleUpdateOptions } from './interfaces/service.interfaces';
+import { RoleSearchDto } from './dto/role-search.dto';
 
 @Injectable()
 export class RoleService {
@@ -19,6 +20,20 @@ export class RoleService {
   async delete(id: string) {
     await this.ensureExistsById(id);
     return this.roleRepository.delete(id);
+  }
+
+  async search(dto: RoleSearchDto) {
+    const [roles, count] = await Promise.all([
+      this.roleRepository.search(dto),
+      this.roleRepository.count(dto),
+    ]);
+    if (!roles.length) {
+      throw new NotFoundException(this.i18n.t('errors.role.notFoundMany'));
+    }
+    return {
+      data: roles,
+      count,
+    };
   }
 
   async update(options: RoleUpdateOptions) {
@@ -41,14 +56,6 @@ export class RoleService {
       throw new NotFoundException(this.i18n.t('errors.role.notFound'));
     }
     return role;
-  }
-
-  async findAll() {
-    const roles = await this.roleRepository.findAll();
-    if (!roles.length) {
-      throw new NotFoundException(this.i18n.t('errors.role.notFoundMany'));
-    }
-    return roles;
   }
 
   async ensureExistsById(id: string) {

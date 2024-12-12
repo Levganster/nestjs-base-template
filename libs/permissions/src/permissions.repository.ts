@@ -1,16 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/common/services/prisma.service';
-
+import { PermissionSearchDto } from './dto/permission-search.dto';
+import { getPagination, mapStringToSearch } from '@app/prisma';
 @Injectable()
 export class PermissionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.permission.findMany();
-  }
-
   async findOneById(id: string) {
     return this.prisma.permission.findUnique({ where: { id } });
+  }
+
+  async search(dto: PermissionSearchDto) {
+    return this.prisma.permission.findMany({
+      where: mapStringToSearch(dto.filters),
+      ...getPagination(dto.pagination),
+    });
+  }
+
+  async count(dto: PermissionSearchDto) {
+    return this.prisma.permission.count({
+      where: mapStringToSearch(dto.filters),
+    });
   }
 
   async findManyByRoleId(roleId: string) {

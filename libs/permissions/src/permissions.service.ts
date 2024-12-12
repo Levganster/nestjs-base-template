@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PermissionRepository } from './permissions.repository';
 import { I18nService } from 'nestjs-i18n';
 import { CheckPermissionOptions } from './interfaces/service.interfaces';
+import { PermissionSearchDto } from './dto/permission-search.dto';
 
 @Injectable()
 export class PermissionService {
@@ -12,16 +13,20 @@ export class PermissionService {
     private readonly i18n: I18nService,
   ) {}
 
-  async findAll() {
-    const permissions = await this.permissionRepository.findAll();
+  async search(dto: PermissionSearchDto) {
+    const [permissions, count] = await Promise.all([
+      this.permissionRepository.search(dto),
+      this.permissionRepository.count(dto),
+    ]);
     if (!permissions.length) {
-      this.logger.error(`Права не найдены`);
       throw new NotFoundException(
-        this.i18n.t('errors.permission.not_found_many'),
+        this.i18n.t('errors.permission.notFoundMany'),
       );
     }
-    this.logger.log(`Права найдены: ${permissions.length}`);
-    return permissions;
+    return {
+      data: permissions,
+      count,
+    };
   }
 
   async findOneById(id: string) {
