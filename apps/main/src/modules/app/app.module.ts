@@ -7,6 +7,7 @@ import { LoggerMiddleware } from '@app/common/middlewares/logger.middleware';
 import { PermissionModule } from 'libs/permissions/src';
 import { PermissionGuard } from '@app/common/guards/permission.guard';
 import { TokenModule } from '@app/token';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TokenModule } from '@app/token';
     }),
     AuthModule,
     TokenModule,
+    UsersModule,
   ],
 })
 export class AppModule implements NestModule {
