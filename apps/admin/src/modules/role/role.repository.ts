@@ -5,6 +5,7 @@ import { RoleUpdateDto } from './dto/role-update.dto';
 import { RoleUpdateOptions } from './interfaces/repository.interfaces';
 import { RoleSearchDto } from './dto/role-search.dto';
 import { getPagination, mapStringToSearch } from '@app/prisma';
+import { mapSortToPrisma } from '@app/prisma/sort.base';
 
 @Injectable()
 export class RoleRepository {
@@ -45,6 +46,7 @@ export class RoleRepository {
   async search(dto: RoleSearchDto) {
     return this.prisma.role.findMany({
       where: mapStringToSearch(dto.filters),
+      orderBy: mapSortToPrisma(dto.sorts),
       ...getPagination(dto.pagination),
     });
   }

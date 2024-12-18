@@ -1,23 +1,28 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { PermissionBaseDto } from './permission-base.dto';
-import { IsObject, IsOptional, ValidateNested } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PaginationDto } from '@app/common';
+import { SearchBaseDto } from '@app/common/base/search.dto';
+import { SortTypes } from '@app/common/constants/sort-types.enum';
+
+export class PermissionSortDto {
+  @ApiProperty({ enum: SortTypes })
+  @IsOptional()
+  @IsString()
+  title?: SortTypes;
+}
 
 export class PermissionFiltersDto extends PartialType(PermissionBaseDto) {}
 
-export class PermissionSearchDto {
+export class PermissionSearchDto extends SearchBaseDto<
+  PermissionFiltersDto,
+  PermissionSortDto
+> {
   @ApiProperty()
-  @IsOptional()
-  @IsObject()
-  @ValidateNested()
   @Type(() => PermissionFiltersDto)
   filters?: PermissionFiltersDto;
 
   @ApiProperty()
-  @IsOptional()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => PaginationDto)
-  pagination?: PaginationDto;
+  @Type(() => PermissionSortDto)
+  sorts?: PermissionSortDto;
 }
