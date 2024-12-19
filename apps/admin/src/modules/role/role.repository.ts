@@ -19,13 +19,15 @@ export class RoleRepository {
     return this.prisma.role.create({
       data: {
         name: dto.name,
-        rolePermissions: {
-          createMany: {
-            data: dto.permissions.map((permission) => ({
-              permissionId: permission,
-            })),
-          },
-        },
+        rolePermissions: dto.permissions.length
+          ? {
+              createMany: {
+                data: dto.permissions.map((permission) => ({
+                  permissionId: permission,
+                })),
+              },
+            }
+          : undefined,
       },
     });
   }
@@ -33,7 +35,19 @@ export class RoleRepository {
   async update(options: RoleUpdateOptions) {
     return this.prisma.role.update({
       where: { id: options.id },
-      data: options.dto,
+      data: {
+        name: options.dto.name,
+        rolePermissions: options.dto.permissions.length
+          ? {
+              deleteMany: {},
+              createMany: {
+                data: options.dto.permissions.map((permission) => ({
+                  permissionId: permission,
+                })),
+              },
+            }
+          : undefined,
+      },
     });
   }
 

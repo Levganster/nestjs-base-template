@@ -37,16 +37,25 @@ export class RoleService {
   }
 
   async update(options: RoleUpdateOptions) {
+    if (options.dto.permissions.length) {
+      await Promise.all(
+        options.dto.permissions.map((permission) =>
+          this.permissionService.ensureExistsById(permission),
+        ),
+      );
+    }
     await this.ensureExistsById(options.id);
     return this.roleRepository.update(options);
   }
 
   async create(dto: RoleCreateDto) {
-    await Promise.all(
-      dto.permissions.map((permission) =>
-        this.permissionService.ensureExistsById(permission),
-      ),
-    );
+    if (dto.permissions.length) {
+      await Promise.all(
+        dto.permissions.map((permission) =>
+          this.permissionService.ensureExistsById(permission),
+        ),
+      );
+    }
     return this.roleRepository.create(dto);
   }
 
