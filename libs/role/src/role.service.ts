@@ -32,9 +32,7 @@ export class RoleService {
       this.roleRepository.search(dto),
       this.roleRepository.count(dto),
     ]);
-    if (!roles.length) {
-      throw new NotFoundException(this.i18n.t('errors.role.notFoundMany'));
-    }
+
     return {
       data: roles,
       count,
