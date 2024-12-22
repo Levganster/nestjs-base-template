@@ -1,33 +1,40 @@
-import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
+import { Body, Controller, Post, Res, HttpStatus } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RefreshDto } from './dto/refresh.dto';
-import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
-import { AuthSummary } from '../../common/swagger/summary/auth.summary';
+import { SignUpDto } from './dto/sign-up.dto';
+import { RefreshDto } from './dto/refresh.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('sign-up')
-  @ApiOperation({ summary: AuthSummary.SIGN_UP })
-  async signUp(@Body() dto: SignUpDto) {
-    return this.authService.signUp(dto);
+  @Post('sign-in')
+  async signIn(@Body() dto: SignInDto, @Res() res: Response) {
+    const tokens = await this.authService.signIn(dto);
+    await this.authService.setTokenCookie(res, tokens.refreshToken);
+    return res.json(tokens);
   }
 
-  @Post('sign-in')
-  @ApiOperation({ summary: AuthSummary.SIGN_IN })
-  @HttpCode(HttpStatus.OK)
-  async signIn(@Body() dto: SignInDto) {
-    return this.authService.signIn(dto);
+  @Post('sign-up')
+  async signUp(@Body() dto: SignUpDto, @Res() res: Response) {
+    const tokens = await this.authService.signUp(dto);
+    await this.authService.setTokenCookie(res, tokens.refreshToken);
+    return res.json(tokens);
   }
 
   @Post('refresh')
-  @ApiOperation({ summary: AuthSummary.REFRESH })
-  @HttpCode(HttpStatus.OK)
-  async refresh(@Body() dto: RefreshDto) {
-    return this.authService.refresh(dto.refreshToken);
+  async refresh(@Body() dto: RefreshDto, @Res() res: Response) {
+    const tokens = await this.authService.refresh(dto.refreshToken);
+    await this.authService.setTokenCookie(res, tokens.refreshToken);
+    return res.json(tokens);
+  }
+
+  @Post('sign-out')
+  async signOut(@Res() res: Response) {
+    res.clearCookie('refreshToken');
+    return res.sendStatus(HttpStatus.OK);
   }
 }
