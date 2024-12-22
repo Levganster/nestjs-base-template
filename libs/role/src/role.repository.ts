@@ -77,4 +77,10 @@ export class RoleRepository {
       select: { id: true },
     }));
   }
+
+  async existsByName(name: string, id?: string) {
+    return !!(await this.prisma.role.findFirst({
+      where: { name, id: { not: id } },
+    }));
+  }
 }
