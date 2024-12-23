@@ -5,14 +5,44 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { LoggerInterceptor } from '@app/common/interceptors/logger.interceptor';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
-  app.use(helmet()); // https://docs.nestjs.com/security/helmet
+  app.use(cookieParser());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          'default-src': ["'self'"],
+          'script-src': [
+            "'self'",
+            "'unsafe-inline'",
+            "'unsafe-eval'",
+            'https://cdn.jsdelivr.net',
+          ],
+          'style-src': [
+            "'self'",
+            "'unsafe-inline'",
+            'https://cdn.jsdelivr.net',
+          ],
+          'img-src': ["'self'", 'data:', 'https://cdn.jsdelivr.net'],
+          'font-src': ["'self'", 'https://cdn.jsdelivr.net'],
+        },
+      },
+    }),
+  );
   app.useGlobalInterceptors(new LoggerInterceptor());
-  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      transformOptions: { enableImplicitConversion: true },
+      validateCustomDecorators: true,
+    }),
+  );
   app.enableCors();
 
   const port = process.env.PORT || 3000;
@@ -43,4 +73,5 @@ async function bootstrap() {
   });
   await app.listen(port);
 }
+
 bootstrap();
