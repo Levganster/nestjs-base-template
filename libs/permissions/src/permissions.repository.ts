@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@app/common/services/prisma.service';
+import { PrismaService } from '@app/prisma/prisma.service';
 import { PermissionSearchDto } from './dto/permission-search.dto';
 import { getPagination, mapStringToSearch } from '@app/prisma';
 import { mapSortToPrisma } from '@app/prisma/sort.base';
+
 @Injectable()
 export class PermissionRepository {
   constructor(private readonly prisma: PrismaService) {}

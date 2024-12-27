@@ -12,7 +12,6 @@ export * from './guards/permission.guard';
 export * from './interceptors/logger.interceptor';
 
 export * from './middlewares/logger.middleware';
-export * from './services/prisma.service';
 
 export * from './types/jwt-payload';
 export * from './types/user';
