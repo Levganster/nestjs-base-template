@@ -25,8 +25,8 @@ services:
     command: >
       sh -c "npx prisma migrate reset --force && npx concurrently \"nest start main\" \"nest start admin\""
     ports:
-      - '3000:3000'
-      - '3001:3001'
+      - '8080:8080'
+      - '8081:8081'
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
       - ACCESS_SECRET=access_secret
