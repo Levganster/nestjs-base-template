@@ -65,7 +65,7 @@ export class UsersService {
     }
   }
 
-  private async deletePassword(user: User): Promise<UserWithoutPassword> {
+  async deletePassword(user: User): Promise<UserWithoutPassword> {
     delete user.password;
     return user;
   }
