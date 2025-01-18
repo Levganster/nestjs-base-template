@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserCreateDto } from './dto/user-create.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '@app/prisma/prisma.service';
+import { BaseRoleEnum } from '@app/common/constants/base-roles.enum';
 
 @Injectable()
 export class UsersRepository {
@@ -27,7 +28,7 @@ export class UsersRepository {
         ...dto,
         role: {
           connect: {
-            name: 'user',
+            name: BaseRoleEnum.User,
           },
         },
       },
