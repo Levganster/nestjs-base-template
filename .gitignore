@@ -15,6 +15,10 @@ lerna-debug.log*
 # OS
 .DS_Store
 
+# SSL
+private.key
+certificate.crt
+
 # Tests
 /coverage
 /.nyc_output

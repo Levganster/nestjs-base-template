@@ -1,39 +1,29 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - '5432:5432'
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'postgres']
-      interval: 3s
-      timeout: 2s
-      retries: 5
-
-  app:
+  main:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.main
     command: >
-      sh -c "npx prisma migrate reset --force && npx concurrently \"nest start main\" \"nest start admin\""
+      sh -c "pnpm start:prod:main"
     ports:
-      - '8080:3000'
-      - '8081:3001'
+      - 3000:3000
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
-      - ACCESS_SECRET=access_secret
-      - REFRESH_SECRET=refresh_secret
-    depends_on:
-      db:
-        condition: service_healthy
-
-volumes:
-  db_data:
+      - DATABASE_URL=${DATABASE_URL}
+      - ACCESS_SECRET=${ACCESS_SECRET}
+      - REFRESH_SECRET=${REFRESH_SECRET}
+      - PORT=3000
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    command: >
+      sh -c "pnpm start:prod:admin"
+    ports:
+      - 3001:3001
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - ACCESS_SECRET=${ACCESS_SECRET}
+      - REFRESH_SECRET=${REFRESH_SECRET}
+      - PORT_ADMIN=3001
