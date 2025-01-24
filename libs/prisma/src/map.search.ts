@@ -1,4 +1,4 @@
-export function mapStringToSearch<T>(
+export function mapSearch<T>(
   where: T,
   excludedValues: string[] = [],
 ): T {
