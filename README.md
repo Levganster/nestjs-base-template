@@ -14,27 +14,6 @@ This template is designed to provide you with a solid foundation for building sc
 
 ## ✨ Features ✨
 
----
-
-- **🔀 Dual ORM Support**:
-
-  - **Prisma**: Available in the `master` branch for a modern and intuitive ORM experience.
-  - **TypeORM** (need updates) : Available in the `typeorm` branch for those who prefer a more traditional ORM approach.
-  - **MongoDB Support**: Just change db provider in `prisma/schema.prisma` and enjoy MongoDb :))
-
-
-- **🌐 API Support**:
-  - **REST API**: Available in `master` branch for classic REST approach
-  - **GraphQL API**: Available in `graphql` branch with full GraphQL support
-  - **Hybrid Mode**: Ability to use both REST and GraphQL simultaneously
-
-- **📊 GraphQL Features** (in `graphql` branch):
-  - **Code-First Approach**: Automatic schema generation from TypeScript classes
-  - **Type Safety**: Full TypeScript support with automatic type generation
-  - **Subscriptions**: Real-time support via WebSocket
-  - **Playground**: Built-in GraphQL IDE for query testing
-  - **Schema Stitching**: Ability to combine multiple GraphQL schemas
-
 - **🔑 JWT Authentication**: Authorization is handled using **JWT** and **passport-jwt**, ensuring secure and stateless authentication.
 
 - **🛡️ Role-Based Access Control**: Effortlessly manage user roles and permissions to ensure the right access levels.
@@ -141,11 +120,8 @@ To get started with this template, follow these steps:
 
 7. **Access Swagger Documentation**: Visit `http://localhost:<3000/3001>/api` to view the automatically generated Swagger documentation.
 
-8. **GraphQL Playground**: Visit `http://localhost:<3000/3001>/graphql` to view the GraphQL playground.
-
-9. **Explore and Customize**: Explore the codebase, add new features, and customize the template to fit your project needs.
+8. **Explore and Customize**: Explore the codebase, add new features, and customize the template to fit your project needs.
 
 ---
 
 Explore these features and more to build a powerful and flexible application with NestJS! 🚀
-
