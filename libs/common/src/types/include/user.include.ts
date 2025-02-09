@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
 
-export const USER_INCLUDE: Prisma.UserInclude = {
-	role: true,
-}
+export const USER_INCLUDE = {
+  role: true,
+} satisfies Prisma.UserInclude;
