@@ -7,11 +7,6 @@ import { UsersRepository } from './users.repository';
 import { UserCreateDto } from './dto/user-create.dto';
 import { I18nService } from 'nestjs-i18n';
 import { PasswordService } from '@app/password';
-import { User, UserWithoutPassword } from '@app/common/types/user';
-import {
-  FindOneByEmailOptions,
-  FindOneByIdOptions,
-} from './interfaces/service.interfaces';
 
 @Injectable()
 export class UsersService {
@@ -30,23 +25,23 @@ export class UsersService {
       ...dto,
       password: hashedPassword,
     });
-    return this.deletePassword(user);
+    return user;
   }
 
-  async findOneByEmail(options: FindOneByEmailOptions) {
-    const user = await this.usersRepository.findOneByEmail(options.email);
+  async findOneByEmail(email: string) {
+    const user = await this.usersRepository.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException(this.i18n.t('errors.user.notFound'));
     }
-    return options.withPassword ? user : this.deletePassword(user);
+    return user;
   }
 
-  async findOneById(options: FindOneByIdOptions) {
-    const user = await this.usersRepository.findOneById(options.id);
+  async findOneById(id: string) {
+    const user = await this.usersRepository.findOneById(id);
     if (!user) {
       throw new NotFoundException(this.i18n.t('errors.user.notFound'));
     }
-    return options.withPassword ? user : this.deletePassword(user);
+    return user;
   }
 
   async ensureExistsById(id: string) {
@@ -63,10 +58,5 @@ export class UsersService {
         this.i18n.translate('errors.user.alreadyExists'),
       );
     }
-  }
-
-  async deletePassword(user: User): Promise<UserWithoutPassword> {
-    delete user.password;
-    return user;
   }
 }

@@ -50,10 +50,7 @@ export class AuthService {
   }
 
   async signIn(dto: SignInDto) {
-    const user = (await this.usersService.findOneByEmail({
-      email: dto.email,
-      withPassword: true,
-    })) as User;
+    const user = (await this.usersService.findOneByEmail(dto.email)) as User;
     if (
       !(await this.passwordService.comparePassword({
         password: dto.password,
