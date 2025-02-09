@@ -60,7 +60,7 @@ describe('UsersService', () => {
     it('should return a user when found', async () => {
       mockUsersRepository.findOneById.mockResolvedValue({ id: '1' });
 
-      const result = await service.findOneById({ id: '1', withPassword: true });
+      const result = await service.findOneById('1');
 
       expect(result).toEqual({ id: '1' });
     });
@@ -69,9 +69,7 @@ describe('UsersService', () => {
       mockUsersRepository.findOneById.mockResolvedValue(null);
       mockI18nService.t.mockReturnValue('User not found');
 
-      await expect(
-        service.findOneById({ id: '1', withPassword: true }),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOneById('1')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -79,10 +77,7 @@ describe('UsersService', () => {
     it('should return a user when found', async () => {
       mockUsersRepository.findOneByEmail.mockResolvedValue({ id: '1' });
 
-      const result = await service.findOneByEmail({
-        email: 'test@example.com',
-        withPassword: true,
-      });
+      const result = await service.findOneByEmail('test@example.com');
 
       expect(result).toEqual({ id: '1' });
     });
@@ -91,12 +86,9 @@ describe('UsersService', () => {
       mockUsersRepository.findOneByEmail.mockResolvedValue(null);
       mockI18nService.t.mockReturnValue('User not found');
 
-      await expect(
-        service.findOneByEmail({
-          email: 'test@example.com',
-          withPassword: true,
-        }),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOneByEmail('test@example.com')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -116,33 +108,6 @@ describe('UsersService', () => {
       await expect(service.ensureExistsById('1')).rejects.toThrow(
         NotFoundException,
       );
-    });
-  });
-
-  describe('deletePassword', () => {
-    it('should return a user without password', async () => {
-      const user: User = {
-        id: '1',
-        email: 'test@example.com',
-        password: 'hashedPassword',
-        role: {
-          id: '1',
-          name: 'user',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        roleId: '1',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      const userWithoutPassword = {
-        ...user,
-        password: undefined,
-      };
-
-      const result = await service.deletePassword(user);
-      expect(result).toEqual(userWithoutPassword);
     });
   });
 });
