@@ -33,10 +33,11 @@ export class PermissionRepository {
   }
 
   async existsById(id: string): Promise<boolean> {
-    return !!(await this.prisma.permission.findUnique({
+    const result = await this.prisma.permission.count({
       where: { id },
-      select: { id: true },
-    }));
+    });
+
+    return result > 0;
   }
 
   async existsMany(ids: string[]): Promise<boolean> {
