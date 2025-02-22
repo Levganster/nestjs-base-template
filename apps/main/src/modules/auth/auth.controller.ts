@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Req,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -40,7 +41,7 @@ export class AuthController {
     return res.json(tokens);
   }
 
-  @Post('sign-out')
+  @Delete('sign-out')
   async signOut(
     @Res() res: Response,
     @Req() req: Request,
