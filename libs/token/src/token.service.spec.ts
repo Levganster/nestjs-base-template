@@ -51,10 +51,10 @@ describe('Token Service', () => {
       const expectedToken = 'access-token';
       mockJwtService.sign.mockReturnValue(expectedToken);
 
-      const result = await service.generateAccessToken(id);
+      const result = await service.generateAccessToken(id, '1');
 
       expect(result).toBe(expectedToken);
-      expect(mockJwtService.sign).toHaveBeenCalledWith({ id });
+      expect(mockJwtService.sign).toHaveBeenCalledWith({ id, roleId: '1' });
     });
   });
 
@@ -64,7 +64,7 @@ describe('Token Service', () => {
       const expectedToken = 'refresh-token';
       mockJwtService.sign.mockReturnValue(expectedToken);
 
-      const result = await service.generateRefreshToken(id);
+      const result = await service.generateRefreshToken(id, '1');
 
       expect(result).toBe(expectedToken);
       expect(mockJwtService.sign).toHaveBeenCalledWith(

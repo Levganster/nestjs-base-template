@@ -10,7 +10,6 @@ import { RoleRepository } from './role.repository';
 import { RoleCreateDto } from './dto/role-create.dto';
 import { RoleUpdateDto } from './dto/role-update.dto';
 import { PERMISSION_SERVICE } from '@app/common/constants/providers.const';
-import { RoleUpdateOptions } from './interfaces/service.interfaces';
 import { RoleSearchDto } from './dto/role-search.dto';
 
 @Injectable()
@@ -39,17 +38,17 @@ export class RoleService {
     };
   }
 
-  async update(options: RoleUpdateOptions) {
-    if (options.dto.permissions.length) {
+  async update(id: string, dto: RoleUpdateDto) {
+    if (dto.permissions.length) {
       await Promise.all(
-        options.dto.permissions.map((permission) =>
+        dto.permissions.map((permission) =>
           this.permissionService.ensureExistsById(permission),
         ),
       );
     }
-    await this.ensureExistsById(options.id);
-    await this.ensureExistsByName(options.dto.name, options.id);
-    return this.roleRepository.update(options);
+    await this.ensureExistsById(id);
+    await this.ensureExistsByName(dto.name, id);
+    return this.roleRepository.update(id, dto);
   }
 
   async create(dto: RoleCreateDto) {

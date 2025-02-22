@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { RoleCreateDto } from './dto/role-create.dto';
 import { RoleUpdateDto } from './dto/role-update.dto';
-import { RoleUpdateOptions } from './interfaces/repository.interfaces';
 import { RoleSearchDto } from './dto/role-search.dto';
 import { mapPagination, mapSearch } from '@app/prisma';
 import { mapSort } from '@app/prisma/map.sort';
@@ -32,16 +31,16 @@ export class RoleRepository {
     });
   }
 
-  async update(options: RoleUpdateOptions) {
+  async update(id: string, dto: RoleUpdateDto) {
     return this.prisma.role.update({
-      where: { id: options.id },
+      where: { id },
       data: {
-        name: options.dto.name,
-        rolePermissions: options.dto.permissions.length
+        name: dto.name,
+        rolePermissions: dto.permissions.length
           ? {
               deleteMany: {},
               createMany: {
-                data: options.dto.permissions.map((permission) => ({
+                data: dto.permissions.map((permission) => ({
                   permissionId: permission,
                 })),
               },

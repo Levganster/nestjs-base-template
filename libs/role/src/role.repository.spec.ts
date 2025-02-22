@@ -126,13 +126,13 @@ describe('Role Repository', () => {
         id: '1',
         ...mockRole,
       });
-      const role = await repository.update({ id: '1', dto: mockRole });
+      const role = await repository.update('1', mockRole);
       expect(role).toEqual({ id: '1', ...mockRole });
     });
 
     it('should return null when role not found', async () => {
       mockPrismaService.role.update.mockResolvedValue(null);
-      const role = await repository.update({ id: '999', dto: mockRole });
+      const role = await repository.update('999', mockRole);
       expect(role).toBeNull();
     });
   });
