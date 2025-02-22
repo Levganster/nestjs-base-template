@@ -12,15 +12,17 @@ export class TokenService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateAccessToken(id: string): Promise<string> {
+  async generateAccessToken(id: string, roleId: string): Promise<string> {
     this.logger.log(`Генерация токена доступа для пользователя с ID: ${id}`);
-    return this.jwtService.sign({ id });
+    return this.jwtService.sign({ id, roleId });
   }
 
-  async generateRefreshToken(id: string): Promise<string> {
-    this.logger.log(`Генерация токена обновления для пользователя с ID: ${id}`);
+  async generateRefreshToken(id: string, roleId: string): Promise<string> {
+    this.logger.log(
+      `Генерация токена обновления для пользователя с ID: ${id} и ролью ID: ${roleId}`,
+    );
     return this.jwtService.sign(
-      { id },
+      { id, roleId },
       {
         secret: this.configService.get('REFRESH_SECRET'),
         expiresIn: '7d',

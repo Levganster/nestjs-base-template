@@ -24,29 +24,31 @@ export class AuthService {
     private readonly i18n: I18nService,
   ) {}
 
+  private async generateTokenPair(userId: string, roleId: string) {
+    return {
+      accessToken: await this.tokenService.generateAccessToken(userId, roleId),
+      refreshToken: await this.tokenService.generateRefreshToken(
+        userId,
+        roleId,
+      ),
+    };
+  }
+
   async setTokensCookie(
     res: Response,
     tokens: { accessToken: string; refreshToken: string },
   ) {
-    await Promise.all([
-      this.setTokenCookie(res, {
-        token: tokens.accessToken,
-        name: 'accessToken',
-      }),
-      this.setTokenCookie(res, {
-        token: tokens.refreshToken,
-        name: 'refreshToken',
-      }),
-    ]);
+    await Promise.all(
+      Object.entries(tokens).map(([name, token]) =>
+        this.setTokenCookie(res, { token, name }),
+      ),
+    );
   }
 
   async signUp(dto: SignUpDto) {
     const user = await this.usersService.create(dto);
     this.logger.log(`Пользователь ${dto.email} зарегистрировался`);
-    return {
-      accessToken: await this.tokenService.generateAccessToken(user.id),
-      refreshToken: await this.tokenService.generateRefreshToken(user.id),
-    };
+    return this.generateTokenPair(user.id, user.roleId);
   }
 
   async signIn(dto: SignInDto) {
@@ -60,10 +62,7 @@ export class AuthService {
       throw new NotFoundException(this.i18n.t('errors.user.notFound'));
     }
     this.logger.log(`Пользователь ${user.email} выполнил вход`);
-    return {
-      accessToken: await this.tokenService.generateAccessToken(user.id),
-      refreshToken: await this.tokenService.generateRefreshToken(user.id),
-    };
+    return this.generateTokenPair(user.id, user.roleId);
   }
 
   async refresh(refreshToken?: string) {
@@ -71,14 +70,8 @@ export class AuthService {
       throw new UnauthorizedException(this.i18n.t('errors.user.notFound'));
     }
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
-    const newAccessToken = await this.tokenService.generateAccessToken(
-      payload.id,
-    );
-    const newRefreshToken = await this.tokenService.generateRefreshToken(
-      payload.id,
-    );
     this.logger.log(`Пользователь ${payload.id} получил новый access-token`);
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    return this.generateTokenPair(payload.id, payload.roleId);
   }
 
   private async setTokenCookie(
