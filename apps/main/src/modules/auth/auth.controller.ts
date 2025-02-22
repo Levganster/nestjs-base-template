@@ -41,8 +41,8 @@ export class AuthController {
     return res.json(tokens);
   }
 
-  @Delete('sign-out')
-  async signOut(
+  @Delete('logout')
+  async logout(
     @Res() res: Response,
     @Req() req: Request,
     @Query('full') full: boolean = false,
