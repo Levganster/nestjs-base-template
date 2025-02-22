@@ -11,6 +11,7 @@ import { User } from '../types/user';
 import { PermissionEnum } from '../constants/permission.enum';
 import { PermissionService } from 'libs/permissions/src';
 import { PERMISSION_SERVICE } from '../constants/providers.const';
+import { JwtPayload } from '../types/jwt-payload';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -28,26 +29,18 @@ export class PermissionGuard implements CanActivate {
     if (!requiredPermissions || requiredPermissions.length === 0) {
       return true;
     }
-    const { user }: { user: User } = context.switchToHttp().getRequest();
-    const hasAllPermissions = await this.hasPermissions(
-      requiredPermissions,
-      user.roleId,
+    const { payload }: { payload: JwtPayload } = context
+      .switchToHttp()
+      .getRequest();
+    const permissions = await this.permissionService.findManyByRoleId(
+      payload.roleId,
+    );
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      permissions.some((p) => p.name === permission),
     );
     if (!hasAllPermissions) {
       throw new ForbiddenException(this.i18n.t('errors.accessDenied'));
     }
     return true;
-  }
-
-  private async hasPermissions(
-    requiredPermissions: PermissionEnum[],
-    roleId: string,
-  ): Promise<boolean> {
-    const permissionsCheckResults = await Promise.all(
-      requiredPermissions.map((permission) =>
-        this.permissionService.checkPermission({ permission, roleId }),
-      ),
-    );
-    return permissionsCheckResults.every((result) => result);
   }
 }
