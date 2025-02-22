@@ -12,6 +12,7 @@ import { PermissionEnum } from '../constants/permission.enum';
 import { PermissionService } from 'libs/permissions/src';
 import { PERMISSION_SERVICE } from '../constants/providers.const';
 import { JwtPayload } from '../types/jwt-payload';
+import { Permission } from '../types/permission';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -23,24 +24,54 @@ export class PermissionGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredPermissions = this.reflector.getAllAndOverride<
-      PermissionEnum[]
-    >('permissions', [context.getHandler(), context.getClass()]);
-    if (!requiredPermissions || requiredPermissions.length === 0) {
+    const requiredPermissions = this.getRequiredPermissions(context);
+
+    if (this.shouldSkipPermissionCheck(requiredPermissions)) {
       return true;
     }
-    const { payload }: { payload: JwtPayload } = context
-      .switchToHttp()
-      .getRequest();
-    const permissions = await this.permissionService.findManyByRoleId(
-      payload.roleId,
-    );
+
+    const payload = this.extractUserPayload(context);
+    const permissions = await this.getUserPermissions(payload.roleId);
+
+    await this.validatePermissions(permissions, requiredPermissions);
+
+    return true;
+  }
+
+  private getRequiredPermissions(context: ExecutionContext): PermissionEnum[] {
+    return this.reflector.getAllAndOverride<PermissionEnum[]>('permissions', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+  }
+
+  private shouldSkipPermissionCheck(permissions: PermissionEnum[]): boolean {
+    return !permissions || permissions.length === 0;
+  }
+
+  private extractUserPayload(context: ExecutionContext): JwtPayload {
+    const { user } = context.switchToHttp().getRequest();
+    return user;
+  }
+
+  private async getUserPermissions(roleId: string): Promise<Permission[]> {
+    try {
+      return await this.permissionService.findManyByRoleId(roleId);
+    } catch (error) {
+      throw new ForbiddenException(this.i18n.t('errors.accessDenied'));
+    }
+  }
+
+  private async validatePermissions(
+    userPermissions: Permission[],
+    requiredPermissions: PermissionEnum[],
+  ): Promise<void> {
     const hasAllPermissions = requiredPermissions.every((permission) =>
-      permissions.some((p) => p.name === permission),
+      userPermissions.some((p) => p.name === permission),
     );
+
     if (!hasAllPermissions) {
       throw new ForbiddenException(this.i18n.t('errors.accessDenied'));
     }
-    return true;
   }
 }

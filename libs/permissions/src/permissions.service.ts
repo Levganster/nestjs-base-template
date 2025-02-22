@@ -33,9 +33,15 @@ export class PermissionService {
       `permissions:${roleId}`,
     );
     if (permissions) {
+      this.logger.log(`Права для роли ${roleId} найдены в кэше`);
       return permissions;
     }
     permissions = await this.permissionRepository.findManyByRoleId(roleId);
+    if (!permissions.length) {
+      this.logger.warn(`Права для роли ${roleId} не найдены`);
+      throw new NotFoundException(this.i18n.t('errors.permission.notFound'));
+    }
+    this.logger.log(`Права для роли ${roleId} найдены в базе данных`);
     await this.cacheManager.set(
       `permissions:${roleId}`,
       permissions,

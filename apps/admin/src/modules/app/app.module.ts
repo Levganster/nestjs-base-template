@@ -1,12 +1,13 @@
 import { PermissionModule } from '@app/permissions';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { I18nModule } from 'nestjs-i18n';
 import { AcceptLanguageResolver } from 'nestjs-i18n';
 import config from '../../config/config';
 import { TokenModule } from '@app/token';
 import { RoleModule } from '../role/role.module';
 import { PermissionsModule } from '../permissions/permissions.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -25,6 +26,14 @@ import { PermissionsModule } from '../permissions/permissions.module';
         watch: true,
       },
       resolvers: [AcceptLanguageResolver],
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        ttl: configService.get('CACHE_TTL'), // milliseconds
+      }),
     }),
     PermissionModule,
     TokenModule,
