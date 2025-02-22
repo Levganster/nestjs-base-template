@@ -90,6 +90,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/role/tsconfig.lib.json"
       }
+    },
+    "sessions": {
+      "type": "library",
+      "root": "libs/sessions",
+      "entryFile": "index",
+      "sourceRoot": "libs/sessions/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sessions/tsconfig.lib.json"
+      }
     }
   }
 }

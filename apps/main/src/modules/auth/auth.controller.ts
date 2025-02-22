@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Res, HttpStatus, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Res,
+  HttpStatus,
+  Req,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
@@ -32,10 +41,18 @@ export class AuthController {
     return res.json(tokens);
   }
 
-  @Post('sign-out')
-  async signOut(@Res() res: Response) {
+  @Delete('sign-out')
+  async signOut(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Query('full') full: boolean = false,
+  ) {
+    const refreshToken = req.cookies['refreshToken'];
+    await this.authService.signOut(refreshToken, full);
+
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
+
     return res.sendStatus(HttpStatus.OK);
   }
 }
