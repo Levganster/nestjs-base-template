@@ -3,4 +3,5 @@ export default () => ({
   DATABASE_URL: process.env.DATABASE_URL,
   ACCESS_SECRET: process.env.ACCESS_SECRET,
   REFRESH_SECRET: process.env.REFRESH_SECRET,
+  CACHE_TTL: parseInt(process.env.CACHE_TTL, 10) || 300, // milliseconds
 });
