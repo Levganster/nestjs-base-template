@@ -16,11 +16,13 @@ This template is designed to provide you with a solid foundation for building sc
 
 - **🔑 JWT Authentication**: Authorization is handled using **JWT** and **passport-jwt**, ensuring secure and stateless authentication.
 
+- **🔑 Sessions**: Sessions are handled using **Redis/Memory** to store user sessions and manage them.
+
 - **🛡️ Role-Based Access Control**: Effortlessly manage user roles and permissions to ensure the right access levels.
 
 - **🌐 Internationalization Support**: Seamlessly support multiple languages and locales to reach a global audience.
 
-- **📜 Swagger | GraphQL Documentation**: Automatically generated API documentation to help you and your team understand and use the API effectively.
+- **📜 Swagger Documentation**: Automatically generated API documentation to help you and your team understand and use the API effectively.
 
 - **🛠️ Modular Architecture**: Clean and organized structure to facilitate scalability and maintainability.
 
@@ -34,7 +36,7 @@ This template is structured to help you quickly start developing your NestJS app
 
 - **Apps**: Add new apps in the `apps` directory. Each app should encapsulate related functionality, including modules, common types, guards, interceptors, etc.
 
-- **Modules**: Add new features by creating modules in the `app-name/src/modules` directory. Each module should encapsulate related functionality, including controllers, services, and repositories.
+- **Modules**: Add new features by creating modules in the `<app-name>/src/modules` directory. Each module should encapsulate related functionality, including controllers, services, and repositories.
 
 - **Controllers**: Define your API endpoints in controllers. Place them in the respective module's directory under `app-name/src/modules`.
 
@@ -50,26 +52,7 @@ This template is structured to help you quickly start developing your NestJS app
 
 - **Internationalization**: Add translations in the `libs/i18n` directory to support multiple languages.
 
-- **Swagger | GraphQL Documentation**: Automatically generate API documentation by annotating your controllers and DTOs with Swagger decorators.
-
----
-
-### 📦 Project Structure
-
-- **apps/** - Separate applications
-
-  - **main/** - Main API application
-  - **admin/** - Administrative API
-
-- **libs/** - Shared libraries
-  - **common/** - Common utilities and types
-  - **i18n/** - Internationalization module
-  - **users/** - Users module
-  - **token/** - JWT tokens module
-  - **permissions/** - Permissions module
-  - **role/** - Role module
-  - **prisma/** - Prisma ORM module
-  - **password/** - Password hashing module
+- **Swagger Documentation**: Automatically generate API documentation by annotating your controllers and DTOs with Swagger decorators.
 
 ---
 
@@ -105,7 +88,7 @@ To get started with this template, follow these steps:
 
    ```bash
    cd <your-repository-name>
-   npm install
+   pnpm install
    ```
 
 4. **Set Up Environment Variables**: Create a `.env` file in the root directory and configure your environment variables. Refer to `.env.example` for guidance.
@@ -115,7 +98,7 @@ To get started with this template, follow these steps:
 6. **Run the Application**: Start the application in development mode.
 
    ```bash
-   npm run start:dev
+   pnpm start:dev
    ```
 
 7. **Access Swagger Documentation**: Visit `http://localhost:<3000/3001>/api` to view the automatically generated Swagger documentation.
