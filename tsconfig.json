@@ -59,6 +59,12 @@
       ],
       "@app/role/*": [
         "libs/role/src/*"
+      ],
+      "@app/sessions": [
+        "libs/sessions/src"
+      ],
+      "@app/sessions/*": [
+        "libs/sessions/src/*"
       ]
     }
   }

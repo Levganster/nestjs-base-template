@@ -103,7 +103,8 @@
       "^@app/users(|/.*)$": "<rootDir>/libs/users/src/$1",
       "^@app/password(|/.*)$": "<rootDir>/libs/password/src/$1",
       "^@app/token(|/.*)$": "<rootDir>/libs/token/src/$1",
-      "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1"
+      "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
+      "^@app/sessions(|/.*)$": "<rootDir>/libs/sessions/src/$1"
     }
   }
 }

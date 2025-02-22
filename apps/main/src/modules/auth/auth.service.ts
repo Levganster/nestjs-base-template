@@ -1,7 +1,7 @@
 import {
+  BadRequestException,
   Injectable,
   Logger,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
@@ -10,8 +10,9 @@ import { SignInDto } from './dto/sign-in.dto';
 import { TokenService } from '@app/token';
 import { UsersService } from '@app/users';
 import { PasswordService } from '@app/password';
-import { User } from '@app/common/types/user';
 import { Response } from 'express';
+import { SessionsService } from '@app/sessions';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,8 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly passwordService: PasswordService,
     private readonly i18n: I18nService,
+    private readonly sessionsService: SessionsService,
+    private readonly configService: ConfigService,
   ) {}
 
   private async generateTokenPair(userId: string, roleId: string) {
@@ -52,26 +55,56 @@ export class AuthService {
   }
 
   async signIn(dto: SignInDto) {
-    const user = (await this.usersService.findOneByEmail(dto.email)) as User;
+    const user = await this.usersService.findOneByEmail(dto.email);
+
     if (
       !(await this.passwordService.comparePassword({
         password: dto.password,
         hashedPassword: user.password,
       }))
     ) {
-      throw new NotFoundException(this.i18n.t('errors.user.notFound'));
+      this.logger.warn(`Неудачная попытка входа для ${dto.email}`);
+      throw new UnauthorizedException(this.i18n.t('errors.unauthorized'));
     }
-    this.logger.log(`Пользователь ${user.email} выполнил вход`);
-    return this.generateTokenPair(user.id, user.roleId);
+
+    const tokens = await this.generateTokenPair(user.id, user.roleId);
+    await this.sessionsService.create(user.id, tokens.refreshToken);
+
+    this.logger.log(`Пользователь ${dto.email} успешно вошел в систему`);
+    return tokens;
   }
 
   async refresh(refreshToken?: string) {
     if (!refreshToken) {
-      throw new UnauthorizedException(this.i18n.t('errors.user.notFound'));
+      throw new UnauthorizedException(this.i18n.t('errors.unauthorized'));
     }
+
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
-    this.logger.log(`Пользователь ${payload.id} получил новый access-token`);
-    return this.generateTokenPair(payload.id, payload.roleId);
+    const session = await this.sessionsService.validateSession(refreshToken);
+
+    await this.sessionsService.deleteSession(refreshToken);
+
+    const tokens = await this.generateTokenPair(payload.id, payload.roleId);
+    await this.sessionsService.create(payload.id, tokens.refreshToken);
+
+    this.logger.log(`Обновлен токен для пользователя ${payload.id}`);
+    return tokens;
+  }
+
+  async signOut(refreshToken: string, fullLogout: boolean = false) {
+    if (!refreshToken) {
+      throw new UnauthorizedException(this.i18n.t('errors.unauthorized'));
+    }
+
+    const session = await this.sessionsService.validateSession(refreshToken);
+
+    if (fullLogout) {
+      await this.sessionsService.deleteAllUserSessions(session.userId);
+      this.logger.log(`Пользователь ${session.userId} вышел из всех сессий`);
+    } else {
+      await this.sessionsService.deleteSession(refreshToken);
+      this.logger.log(`Пользователь ${session.userId} вышел из текущей сессии`);
+    }
   }
 
   private async setTokenCookie(
