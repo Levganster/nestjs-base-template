@@ -28,6 +28,8 @@ This template is designed to provide you with a solid foundation for building sc
 
 - **⚡ High Performance**: Optimized for speed and efficiency, ensuring your application runs smoothly.
 
+- **🐳 Docker**: Docker compose file for development environment.
+
 ---
 
 ## 📘 Introduction
