@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { PermissionService } from './permissions.service';
 import { PermissionRepository } from './permissions.repository';
 import { UsersModule } from '@app/users';
 import { PERMISSION_SERVICE } from '@app/common/constants/providers.const';
 import { PrismaModule } from '@app/prisma/prisma.module';
 
+@Global()
 @Module({
   controllers: [],
   providers: [

@@ -8,7 +8,8 @@ import { TokenModule } from '@app/token';
 import { RoleModule } from '../role/role.module';
 import { PermissionsModule } from '../permissions/permissions.module';
 import { CacheModule } from '@nestjs/cache-manager';
-import { UsersModule } from '@app/users';
+import { UsersModule as LibUsersModule } from '@app/users';
+import { PermissionModule as LibPermissionModule } from '@app/permissions';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { UsersModule } from '@app/users';
     TokenModule,
     RoleModule,
     PermissionsModule,
-    UsersModule,
+    LibUsersModule,
+    LibPermissionModule,
   ],
 })
 export class AppModule {}

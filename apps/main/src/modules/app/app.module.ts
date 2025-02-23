@@ -8,6 +8,7 @@ import { TokenModule } from '@app/token';
 import { UsersModule } from '../users/users.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UsersModule as LibUsersModule } from '@app/users';
+import { PermissionModule as LibPermissionModule } from '@app/permissions';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { UsersModule as LibUsersModule } from '@app/users';
     TokenModule,
     UsersModule,
     LibUsersModule,
+    LibPermissionModule,
   ],
 })
 export class AppModule implements NestModule {
