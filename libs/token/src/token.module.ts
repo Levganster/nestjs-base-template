@@ -16,7 +16,6 @@ import { UsersModule } from '@app/users';
       }),
     }),
     PassportModule,
-    UsersModule,
   ],
   providers: [TokenService, JwtStrategy],
   exports: [TokenService, JwtModule],
