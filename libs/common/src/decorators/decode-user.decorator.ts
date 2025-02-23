@@ -5,9 +5,3 @@ export const DecodeUser = createParamDecorator(
     return context.switchToHttp().getRequest().user;
   },
 );
-
-export const DecodeUserWs = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
-    return context.switchToWs().getClient().data.user;
-  },
-);
