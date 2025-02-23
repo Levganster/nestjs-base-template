@@ -4,11 +4,10 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import config from '../../config/config';
 import { AuthModule } from '../auth/auth.module';
 import { LoggerMiddleware } from '@app/common/middlewares/logger.middleware';
-import { PermissionModule } from 'libs/permissions/src';
-import { PermissionGuard } from '@app/common/guards/permission.guard';
 import { TokenModule } from '@app/token';
 import { UsersModule } from '../users/users.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { UsersModule as LibUsersModule } from '@app/users';
 
 @Module({
   imports: [
@@ -39,6 +38,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     AuthModule,
     TokenModule,
     UsersModule,
+    LibUsersModule,
   ],
 })
 export class AppModule implements NestModule {
