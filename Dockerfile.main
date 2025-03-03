@@ -3,19 +3,16 @@ FROM node:20
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-COPY pnpm-lock.yaml ./
 
 COPY private.key ./
 COPY certificate.crt ./
 
-RUN npm install -g pnpm
-
-RUN pnpm install --frozen-lockfile
+RUN npm i
 
 COPY . .
 
-RUN pnpm prisma generate
-RUN pnpm build:main
+RUN npx prisma generate
+RUN npm run build:main
 
 
 

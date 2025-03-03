@@ -11,29 +11,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
+
   app.use(cookieParser());
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          'default-src': ["'self'"],
-          'script-src': [
-            "'self'",
-            "'unsafe-inline'",
-            "'unsafe-eval'",
-            'https://cdn.jsdelivr.net',
-          ],
-          'style-src': [
-            "'self'",
-            "'unsafe-inline'",
-            'https://cdn.jsdelivr.net',
-          ],
-          'img-src': ["'self'", 'data:', 'https://cdn.jsdelivr.net'],
-          'font-src': ["'self'", 'https://cdn.jsdelivr.net'],
-        },
-      },
-    }),
-  );
+  app.use(helmet());
   app.useGlobalInterceptors(new LoggerInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
@@ -43,6 +23,7 @@ async function bootstrap() {
       validateCustomDecorators: true,
     }),
   );
+
   app.enableCors({
     origin: true,
     credentials: true,
