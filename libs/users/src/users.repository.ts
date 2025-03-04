@@ -37,18 +37,26 @@ export class UsersRepository {
   }
 
   async existsById(id: string) {
-    const result = await this.prisma.user.count({
-      where: { id },
-    });
+    const result = await this.prisma.$queryRaw`
+      SELECT EXISTS (
+        SELECT 1
+        FROM users
+        WHERE id = ${id}
+      ) as exists
+    `;
 
-    return result > 0;
+    return Boolean(result[0].exists);
   }
 
   async existsByEmail(email: string) {
-    const result = await this.prisma.user.count({
-      where: { email },
-    });
+    const result = await this.prisma.$queryRaw`
+      SELECT EXISTS (
+        SELECT 1
+        FROM users
+        WHERE email = ${email}
+      ) as exists
+    `;
 
-    return result > 0;
+    return Boolean(result[0].exists);
   }
 }

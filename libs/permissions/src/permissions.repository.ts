@@ -33,17 +33,25 @@ export class PermissionRepository {
   }
 
   async existsById(id: string): Promise<boolean> {
-    const result = await this.prisma.permission.count({
-      where: { id },
-    });
+    const result = await this.prisma.$queryRaw`
+      SELECT EXISTS (
+        SELECT 1
+        FROM permissions
+        WHERE id = ${id}
+      ) as exists
+    `;
 
-    return result > 0;
+    return Boolean(result[0].exists);
   }
 
   async existsMany(ids: string[]): Promise<boolean> {
-    const permissionExistsResults = await Promise.all(
-      ids.map((id) => this.existsById(id)),
-    );
-    return permissionExistsResults.every((exists) => exists);
+    const result = await this.prisma.$queryRaw`
+      SELECT EXISTS (
+        SELECT 1
+        FROM permissions
+        WHERE id IN (${ids.map((id) => id).join(',')})
+      ) as exists
+    `;
+    return Boolean(result[0].exists);
   }
 }
