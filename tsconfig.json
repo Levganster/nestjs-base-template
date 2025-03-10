@@ -65,6 +65,12 @@
       ],
       "@app/sessions/*": [
         "libs/sessions/src/*"
+      ],
+      "@app/media": [
+        "libs/media/src"
+      ],
+      "@app/media/*": [
+        "libs/media/src/*"
       ]
     }
   }
