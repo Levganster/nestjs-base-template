@@ -21,6 +21,7 @@ export class RemovePasswordInterceptor implements NestInterceptor {
 
   private async removePasswordFromItem(item: any): Promise<any> {
     if (item?.password) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = item;
       return rest;
     }
