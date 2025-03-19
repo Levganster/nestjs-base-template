@@ -1,7 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
-
 export const options = {
   scenarios: {
     highLoad: {
@@ -16,8 +15,8 @@ export const options = {
 };
 
 const payload = {
-  email: "string@gmail.com",
-  password: "string",
+  email: 'string@gmail.com',
+  password: 'string',
 };
 
 const url = 'http://localhost:3000/api/auth/sign-in';
@@ -31,10 +30,7 @@ export default function () {
     'status is 201': (r) => r.status === 201,
     'response format is correct': (r) => {
       const body = r.body;
-      return (
-        body?.includes('accessToken') &&
-        body?.includes('refreshToken')
-      );
+      return body?.includes('accessToken') && body?.includes('refreshToken');
     },
   });
 }
