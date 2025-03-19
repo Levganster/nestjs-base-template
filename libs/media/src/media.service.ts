@@ -61,7 +61,7 @@ export class MediaService {
     const key = `${type}-${url}.${ext}`;
 
     try {
-      const upload = await this.s3.putObject({
+      await this.s3.putObject({
         Bucket: this.configService.get('S3_BUCKET_NAME'),
         Key: key,
         Body: file.buffer,
