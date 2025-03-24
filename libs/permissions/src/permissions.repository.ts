@@ -3,16 +3,17 @@ import { PrismaService } from '@app/prisma/prisma.service';
 import { PermissionSearchDto } from './dto/permission-search.dto';
 import { mapPagination, mapSearch } from '@app/prisma';
 import { mapSort } from '@app/prisma/map.sort';
+import { Permission } from '@app/common/types/permission';
 
 @Injectable()
 export class PermissionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<Permission> {
     return this.prisma.permission.findUnique({ where: { id } });
   }
 
-  async search(dto: PermissionSearchDto) {
+  async search(dto: PermissionSearchDto): Promise<Permission[]> {
     return this.prisma.permission.findMany({
       where: mapSearch(dto.filters),
       orderBy: mapSort(dto.sorts),
@@ -20,13 +21,13 @@ export class PermissionRepository {
     });
   }
 
-  async count(dto: PermissionSearchDto) {
+  async count(dto: PermissionSearchDto): Promise<number> {
     return this.prisma.permission.count({
       where: mapSearch(dto.filters),
     });
   }
 
-  async findManyByRoleId(roleId: string) {
+  async findManyByRoleId(roleId: string): Promise<Permission[]> {
     return this.prisma.permission.findMany({
       where: { rolePermissions: { some: { roleId } } },
     });

@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MediaRepository } from './media.repository';
 import { I18nService } from 'nestjs-i18n';
 import { Readable } from 'stream';
+import { Media } from '@app/common/types/media';
 
 @Injectable()
 export class MediaService {
@@ -32,7 +33,7 @@ export class MediaService {
     }
   }
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<Media> {
     const media = await this.repository.findOneById(id);
     if (!media) {
       throw new NotFoundException(this.i18n.t('errors.media.notFound'));
@@ -40,21 +41,21 @@ export class MediaService {
     return media;
   }
 
-  async ensureExistsById(id: string) {
+  async ensureExistsById(id: string): Promise<void> {
     const exists = await this.repository.existsById(id);
     if (!exists) {
       throw new NotFoundException(this.i18n.t('errors.media.notFound'));
     }
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<Media> {
     await this.ensureExistsById(id);
     const media = await this.repository.delete(id);
     await this.deleteObject(media.url);
     return media;
   }
 
-  async upload(file: Express.Multer.File, type: MediaType) {
+  async upload(file: Express.Multer.File, type: MediaType): Promise<Media> {
     const url = uuidv4();
     const ext = file.originalname.split('.').pop();
 
@@ -78,7 +79,7 @@ export class MediaService {
     }
   }
 
-  async deleteObject(key: string) {
+  async deleteObject(key: string): Promise<void> {
     try {
       await this.s3.deleteObject({
         Bucket: this.configService.get('S3_BUCKET_NAME'),

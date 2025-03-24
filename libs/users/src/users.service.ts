@@ -10,6 +10,7 @@ import { UserCreateDto } from './dto/user-create.dto';
 import { I18nService } from 'nestjs-i18n';
 import { PasswordService } from '@app/password';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { User } from '@app/common';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,7 @@ export class UsersService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async create(dto: UserCreateDto) {
+  async create(dto: UserCreateDto): Promise<User> {
     await this.ensureExistsByEmail(dto.email);
     const hashedPassword = await this.passwordService.hashPassword(
       dto.password,
@@ -34,7 +35,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<User> {
     const user = await this.usersRepository.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException(this.i18n.t('errors.user.notFound'));
@@ -42,8 +43,8 @@ export class UsersService {
     return user;
   }
 
-  async findOneById(id: string) {
-    const cachedUser = await this.cacheManager.get(`user:${id}`);
+  async findOneById(id: string): Promise<User> {
+    const cachedUser = await this.cacheManager.get<User>(`user:${id}`);
     if (cachedUser) {
       this.logger.log(`User ${id} found in cache`);
       return cachedUser;
@@ -60,14 +61,14 @@ export class UsersService {
     return user;
   }
 
-  async ensureExistsById(id: string) {
+  async ensureExistsById(id: string): Promise<void> {
     const exists = await this.usersRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException(this.i18n.t('errors.user.notFound'));
     }
   }
 
-  async ensureExistsByEmail(email: string) {
+  async ensureExistsByEmail(email: string): Promise<void> {
     const exists = await this.usersRepository.existsByEmail(email);
     if (exists) {
       throw new ConflictException(

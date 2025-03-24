@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Patch,
-  Post,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,7 +12,6 @@ import { DecodeUser } from '@app/common/decorators/decode-user.decorator';
 import { UsersService as LibUsersService } from '@app/users';
 import { RemovePasswordInterceptor } from '@app/common/interceptors/password.interceptor';
 import { User } from '@app/common';
-import { UserSearchDto } from '@app/users/dto/user.search.dto';
 import { UsersService } from './users.service';
 import { UpdateAvatarDto } from './dto/avatar.update.dto';
 

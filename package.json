@@ -9,6 +9,7 @@
     "seed": "ts-node prisma/seeds/seed.ts"
   },
   "scripts": {
+    "prettier": "prettier --write **/*.ts",
     "build": "nest build main && nest build admin",
     "build:main": "nest build main",
     "build:admin": "nest build admin",

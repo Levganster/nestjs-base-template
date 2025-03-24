@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PermissionRepository } from './permissions.repository';
 import { I18nService } from 'nestjs-i18n';
-import { CheckPermissionOptions } from './interfaces/service.interfaces';
 import { PermissionSearchDto } from './dto/permission-search.dto';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Permission } from '@app/common/types/permission';
@@ -28,7 +27,7 @@ export class PermissionService {
     };
   }
 
-  async findManyByRoleId(roleId: string) {
+  async findManyByRoleId(roleId: string): Promise<Permission[]> {
     let permissions = await this.cacheManager.get<Permission[]>(
       `permissions:${roleId}`,
     );
@@ -50,7 +49,7 @@ export class PermissionService {
     return permissions;
   }
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<Permission> {
     const permission = await this.permissionRepository.findOneById(id);
     if (!permission) {
       this.logger.warn(`Право ${id} не найдено`);
@@ -60,7 +59,7 @@ export class PermissionService {
     return permission;
   }
 
-  async ensureExistsById(id: string) {
+  async ensureExistsById(id: string): Promise<void> {
     const exists = await this.permissionRepository.existsById(id);
     if (!exists) {
       this.logger.warn(`Право ${id} не найдено`);
