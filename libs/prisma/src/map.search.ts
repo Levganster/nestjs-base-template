@@ -3,7 +3,11 @@ export function mapSearch<T>(where: T, excludedValues: string[] = []): T {
     return {} as T;
   }
   return Object.entries(where).reduce((acc, [key, value]) => {
-    if (typeof value === 'string' && !excludedValues.includes(key)) {
+    if (excludedValues.includes(key)) {
+      return acc;
+    }
+
+    if (typeof value === 'string') {
       acc[key] = { contains: value.toLowerCase(), mode: 'insensitive' };
     } else {
       acc[key] = value;
