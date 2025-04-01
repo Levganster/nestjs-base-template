@@ -17,7 +17,7 @@ import { RoleSearchDto } from '@app/role/dto/role-search.dto';
 import { RoleService } from '@app/role';
 import { RoleCreateDto } from '@app/role/dto/role-create.dto';
 import { RoleUpdateDto } from '@app/role/dto/role-update.dto';
-import { CanDeleteRoleGuard } from './guards/can-delete.guard';
+import { CanEditRoleGuard } from './guards/can-edit.guard';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -44,13 +44,14 @@ export class RoleController {
   }
 
   @Patch(':id')
+  @UseGuards(CanEditRoleGuard)
   @HasPermissions(PermissionEnum.RoleUpdate)
   async update(@Param('id') id: string, @Body() dto: RoleUpdateDto) {
     return this.roleService.update(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(CanDeleteRoleGuard)
+  @UseGuards(CanEditRoleGuard)
   @HasPermissions(PermissionEnum.RoleDelete)
   async delete(@Param('id') id: string) {
     return this.roleService.delete(id);

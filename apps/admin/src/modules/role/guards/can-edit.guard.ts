@@ -9,7 +9,7 @@ import {
 import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
-export class CanDeleteRoleGuard implements CanActivate {
+export class CanEditRoleGuard implements CanActivate {
   constructor(
     private readonly roleService: RoleService,
     private readonly i18n: I18nService,
@@ -24,7 +24,7 @@ export class CanDeleteRoleGuard implements CanActivate {
 
     if (Object.values(BaseRoleEnum).includes(role.name as BaseRoleEnum)) {
       throw new ForbiddenException(
-        this.i18n.t('errors.role.cannotDeleteBaseRole'),
+        this.i18n.t('errors.role.cannotEditBaseRole'),
       );
     }
 

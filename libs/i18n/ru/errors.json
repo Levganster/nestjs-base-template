@@ -19,7 +19,7 @@
     "role": {
         "notFound": "Роль не найдена",
         "notFoundMany": "Роли не найдены",
-        "cannotDeleteBaseRole": "Вы не можете удалить базовую роль"
+        "cannotEditBaseRole": "Вы не можете редактировать базовую роль"
     },
     "media": {
         "notFound": "Медиа не найдено",
