@@ -18,7 +18,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT_ADMIN || 3001;
 
   const config = new DocumentBuilder()
     .setTitle('Admin Nest Template')
