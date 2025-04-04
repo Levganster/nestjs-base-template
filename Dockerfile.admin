@@ -4,10 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-COPY private.key ./
-COPY certificate.crt ./
-
-RUN npm i 
+RUN npm ci 
 
 COPY . .
 
