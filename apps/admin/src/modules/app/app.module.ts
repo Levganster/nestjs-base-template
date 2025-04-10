@@ -10,6 +10,8 @@ import { PermissionsModule } from '../permissions/permissions.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UsersModule as LibUsersModule } from '@app/users';
 import { PermissionModule as LibPermissionModule } from '@app/permissions';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard, PermissionGuard } from '@app/common';
 
 @Module({
   imports: [
@@ -43,6 +45,16 @@ import { PermissionModule as LibPermissionModule } from '@app/permissions';
     PermissionsModule,
     LibUsersModule,
     LibPermissionModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard,
+    },
   ],
 })
 export class AppModule {}

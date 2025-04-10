@@ -11,8 +11,6 @@ import {
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { HasPermissions } from '@app/common';
 import { PermissionEnum } from '@app/common';
-import { JwtAuthGuard } from '@app/common';
-import { PermissionGuard } from '@app/common';
 import { RoleSearchDto } from '@app/role/dto/role-search.dto';
 import { RoleService } from '@app/role';
 import { RoleCreateDto } from '@app/role/dto/role-create.dto';
@@ -20,7 +18,6 @@ import { RoleUpdateDto } from '@app/role/dto/role-update.dto';
 import { CanEditRoleGuard } from './guards/can-edit.guard';
 
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionGuard)
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
