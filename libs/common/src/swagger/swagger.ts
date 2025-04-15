@@ -6,7 +6,7 @@ import { DocumentBuilder } from '@nestjs/swagger';
 export const swaggerInit = async (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const config = new DocumentBuilder()
-    .setTitle('АПИ Активный студент')
+    .setTitle('Nest.js Base Template')
     .addBearerAuth({
       type: 'http',
       scheme: 'bearer',
@@ -61,7 +61,7 @@ export const swaggerInit = async (app: INestApplication) => {
       tryItOutEnabled: true,
       syntaxHighlight: true,
     },
-    customSiteTitle: 'АПИ Активный студент',
+    customSiteTitle: 'Nest.js Base Template',
     customCss: '.swagger-ui .topbar { display: none }',
   });
 };
