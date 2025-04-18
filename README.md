@@ -64,13 +64,13 @@ This template is structured to help you quickly start developing your NestJS app
 
 - Primary API application
 - Port: 3000
-- Swagger: http://localhost:3000/api
+- Swagger: http://localhost:3000/docs
 
 ### Admin API (apps/admin)
 
 - Administrative API
 - Port: 3001
-- Swagger: http://localhost:3001/api
+- Swagger: http://localhost:3001/docs
 
 ---
 
@@ -90,20 +90,20 @@ To get started with this template, follow these steps:
 
    ```bash
    cd <your-repository-name>
-   pnpm install
+   npm i
    ```
 
 4. **Set Up Environment Variables**: Create a `.env` file in the root directory and configure your environment variables. Refer to `.env.example` for guidance.
 
-5. **Database Setup**: Ensure your database is running and configured correctly. Use Prisma or TypeORM migrations to set up your database schema.
+5. **Database Setup**: Ensure your database is running and configured correctly. Use Prisma migrations to set up your database schema.
 
 6. **Run the Application**: Start the application in development mode.
 
    ```bash
-   pnpm start:dev
+   npm run dev
    ```
 
-7. **Access Swagger Documentation**: Visit `http://localhost:<3000/3001>/api` to view the automatically generated Swagger documentation.
+7. **Access Swagger Documentation**: Visit `http://localhost:<3000/3001>/docs` to view the automatically generated Swagger documentation.
 
 8. **Explore and Customize**: Explore the codebase, add new features, and customize the template to fit your project needs.
 
