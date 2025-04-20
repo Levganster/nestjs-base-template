@@ -11,6 +11,8 @@ import { MediaRepository } from './media.repository';
 import { I18nService } from 'nestjs-i18n';
 import { Readable } from 'stream';
 import { Media } from '@app/common/types/media';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class MediaService {
@@ -57,15 +59,14 @@ export class MediaService {
 
   async upload(file: Express.Multer.File, type: MediaType): Promise<Media> {
     const url = uuidv4();
-    const ext = file.originalname.split('.').pop();
-
-    const key = `${type}-${url}.${ext}`;
+    const key = `${type}-${url}`;
 
     try {
       await this.s3.putObject({
         Bucket: this.configService.get('S3_BUCKET_NAME'),
         Key: key,
         Body: file.buffer,
+        ContentType: file.mimetype,
       });
 
       const media = await this.repository.create({
@@ -85,6 +86,19 @@ export class MediaService {
         Bucket: this.configService.get('S3_BUCKET_NAME'),
         Key: key,
       });
+    } catch (error) {
+      throw new NotFoundException(this.i18n.t('errors.media.notFound'));
+    }
+  }
+
+  async getPresignedUrl(key: string): Promise<string> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: this.configService.get('S3_BUCKET_NAME'),
+        Key: key,
+        ResponseContentType: 'image/jpeg',
+      });
+      return await getSignedUrl(this.s3, command, { expiresIn: 3600 });
     } catch (error) {
       throw new NotFoundException(this.i18n.t('errors.media.notFound'));
     }

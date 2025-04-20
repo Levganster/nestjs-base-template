@@ -6,7 +6,6 @@ import {
   Get,
   Param,
   Post,
-  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,7 +16,6 @@ import { MediaType } from '@prisma/client';
 import { fileFilter } from './helpers/file.filter';
 import { MediaCreateDto } from '@app/media/dto/media.create.dto';
 import { JwtAuthGuard } from '@app/common/guards/auth.guard';
-import { Response } from 'express';
 
 @Controller('media')
 @ApiTags('Media')
@@ -25,10 +23,9 @@ export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
   @Get(':key')
-  async findOneByKey(@Param('key') key: string, @Res() res: Response) {
-    const media = await this.mediaService.findOneByKey(key);
-    res.setHeader('Content-Type', 'image/jpeg');
-    media.pipe(res);
+  async findOneByKey(@Param('key') key: string) {
+    const presignedUrl = await this.mediaService.getPresignedUrl(key);
+    return { url: presignedUrl };
   }
 
   @ApiBearerAuth()
