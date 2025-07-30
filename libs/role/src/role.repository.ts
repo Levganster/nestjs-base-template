@@ -18,15 +18,6 @@ export class RoleRepository {
     return this.prisma.role.create({
       data: {
         name: dto.name,
-        rolePermissions: dto.permissions.length
-          ? {
-              createMany: {
-                data: dto.permissions.map((permission) => ({
-                  permissionId: permission,
-                })),
-              },
-            }
-          : undefined,
       },
     });
   }
@@ -36,16 +27,6 @@ export class RoleRepository {
       where: { id },
       data: {
         name: dto.name,
-        rolePermissions: dto.permissions.length
-          ? {
-              deleteMany: {},
-              createMany: {
-                data: dto.permissions.map((permission) => ({
-                  permissionId: permission,
-                })),
-              },
-            }
-          : undefined,
       },
     });
   }

@@ -1,4 +1,4 @@
-import { BaseRoleEnum } from '@app/common/constants/base-roles.enum';
+import { RoleEnum } from '@app/common/constants/roles.enum';
 import { RoleService } from '@app/role';
 import {
   CanActivate,
@@ -22,7 +22,7 @@ export class CanEditRoleGuard implements CanActivate {
 
     const role = await this.roleService.findOneById(roleId);
 
-    if (Object.values(BaseRoleEnum).includes(role.name as BaseRoleEnum)) {
+    if (Object.values(RoleEnum).includes(role.name as RoleEnum)) {
       throw new ForbiddenException(
         this.i18n.t('errors.role.cannotEditBaseRole'),
       );

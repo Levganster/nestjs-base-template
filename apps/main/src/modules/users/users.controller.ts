@@ -9,7 +9,6 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@app/common/guards/auth.guard';
 import { DecodeUser } from '@app/common/decorators/decode-user.decorator';
-import { UsersService as LibUsersService } from '@app/users';
 import { RemovePasswordInterceptor } from '@app/common/interceptors/password.interceptor';
 import { User } from '@app/common';
 import { UsersService } from './users.service';
@@ -21,10 +20,7 @@ import { UpdateAvatarDto } from './dto/avatar.update.dto';
 @ApiBearerAuth()
 @UseInterceptors(RemovePasswordInterceptor)
 export class UsersController {
-  constructor(
-    private readonly libService: LibUsersService,
-    private readonly service: UsersService,
-  ) {}
+  constructor(private readonly service: UsersService) {}
 
   @Get('me')
   async me(@DecodeUser() user: User) {

@@ -17,7 +17,11 @@ export class SessionsService {
       this.configService.get<number>('MAX_SESSIONS_PER_USER') || 5;
   }
 
-  async create(userId: string, refreshToken: string) {
+  async create(userId: string, refreshToken: string, jti?: string) {
+    this.logger.log(
+      `Попытка создать сессию для пользователя ${userId} с jti: ${jti}`,
+    );
+
     const sessions = await this.findManyByUserId(userId);
 
     if (sessions.length >= this.maxSessions) {
@@ -28,9 +32,22 @@ export class SessionsService {
       await this.deleteSession(oldestSession.refreshToken);
     }
 
-    const session = await this.sessionsRepository.create(userId, refreshToken);
-    this.logger.log(`Создана новая сессия для пользователя ${userId}`);
-    return session;
+    try {
+      const session = await this.sessionsRepository.create(
+        userId,
+        refreshToken,
+        jti,
+      );
+      this.logger.log(
+        `Создана новая сессия для пользователя ${userId} с ID: ${session.id}`,
+      );
+      return session;
+    } catch (error) {
+      this.logger.error(
+        `Ошибка создания сессии для пользователя ${userId}: ${error.message}`,
+      );
+      throw error;
+    }
   }
 
   async validateSession(refreshToken: string) {
@@ -45,6 +62,23 @@ export class SessionsService {
     if (this.isSessionExpired(session.createdAt)) {
       this.logger.warn(`Сессия с токеном ${refreshToken} истекла`);
       await this.deleteSession(refreshToken);
+      throw new UnauthorizedException(this.i18n.t('errors.sessionExpired'));
+    }
+
+    return session;
+  }
+
+  async validateSessionByJti(jti: string) {
+    const session = await this.sessionsRepository.findByJti(jti);
+
+    if (!session) {
+      this.logger.warn(`Сессия с jti ${jti} не найдена`);
+      throw new UnauthorizedException(this.i18n.t('errors.unauthorized'));
+    }
+
+    if (this.isSessionExpired(session.createdAt)) {
+      this.logger.warn(`Сессия с jti ${jti} истекла`);
+      await this.deleteSession(session.refreshToken);
       throw new UnauthorizedException(this.i18n.t('errors.sessionExpired'));
     }
 

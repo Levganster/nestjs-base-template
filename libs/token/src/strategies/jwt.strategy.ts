@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { I18nService } from 'nestjs-i18n';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { SessionsService } from '@app/sessions';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,6 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly i18n: I18nService,
+    private readonly sessionsService: SessionsService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -23,6 +25,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload) {
     try {
       const user = await this.usersService.findOneById(payload.id);
+      
+      if (payload.jti) {
+        await this.sessionsService.validateSessionByJti(payload.jti);
+      }
+      
       return user;
     } catch (error) {
       throw new UnauthorizedException(this.i18n.t('errors.unauthorized'));

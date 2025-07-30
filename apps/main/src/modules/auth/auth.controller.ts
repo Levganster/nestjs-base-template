@@ -7,12 +7,16 @@ import {
   Req,
   Query,
   Delete,
+  Param,
+  UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ForgotPasswordDto, ResetPasswordDto } from './dto/password.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { DecodeUser, JwtAuthGuard, User } from '@app/common';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -33,6 +37,31 @@ export class AuthController {
     return res.json(tokens);
   }
 
+  @Post('sign-up/confirm/:token')
+  async confirmSignUp(@Param('token') token: string) {
+    return await this.authService.verifyEmail(token);
+  }
+
+  @Post('sign-up/resend-token')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async resendVerificationEmail(@DecodeUser() user: User) {
+    return await this.authService.resendVerificationEmail(user.id);
+  }
+
+  @Post('password/forgot')
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return await this.authService.forgotPassword(dto);
+  }
+
+  @Post('password/reset/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body() dto: ResetPasswordDto,
+  ) {
+    return await this.authService.resetPassword(token, dto);
+  }
+
   @Post('refresh')
   async refresh(@Res() res: Response, @Req() req: Request) {
     const refreshToken = req.cookies['refreshToken'];
@@ -41,8 +70,8 @@ export class AuthController {
     return res.json(tokens);
   }
 
-  @Delete('logout')
-  async logout(
+  @Delete('signOut')
+  async signOut(
     @Res() res: Response,
     @Req() req: Request,
     @Query('full') full: boolean = false,

@@ -8,7 +8,6 @@ import { TokenModule } from '@app/token';
 import { UsersModule } from '../users/users.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UsersModule as LibUsersModule } from '@app/users';
-import { PermissionModule as LibPermissionModule } from '@app/permissions';
 import { S3Module } from 'nestjs-s3';
 import { MediaModule } from '../media/media.module';
 
@@ -57,7 +56,6 @@ import { MediaModule } from '../media/media.module';
     TokenModule,
     UsersModule,
     LibUsersModule,
-    LibPermissionModule,
     MediaModule,
   ],
 })

@@ -6,10 +6,10 @@ import { BaseUser } from '@app/common';
 export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async updateAvatar(id: string, avatarId: string): Promise<BaseUser> {
+  async updateAvatar(id: string, avatar: string): Promise<BaseUser> {
     return this.prisma.user.update({
       where: { id },
-      data: { avatarId },
+      data: { person: { update: { avatar } } },
     });
   }
 }

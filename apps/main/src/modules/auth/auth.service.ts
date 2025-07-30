@@ -12,7 +12,11 @@ import { UsersService } from '@app/users';
 import { PasswordService } from '@app/password';
 import { Response } from 'express';
 import { SessionsService } from '@app/sessions';
-import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@app/prisma/prisma.service';
+import { EmailService } from '@app/email';
+import * as crypto from 'crypto';
+import { ForgotPasswordDto, ResetPasswordDto } from './dto/password.dto';
+import { RoleEnum } from '@app/common/constants/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -24,16 +28,21 @@ export class AuthService {
     private readonly passwordService: PasswordService,
     private readonly i18n: I18nService,
     private readonly sessionsService: SessionsService,
-    private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
   ) {}
 
-  private async generateTokenPair(userId: string, roleId: string) {
+  private async generateTokenPair(userId: string) {
+    const accessTokenData = await this.tokenService.generateAccessToken(userId);
+    const refreshTokenData = await this.tokenService.generateRefreshToken(
+      userId,
+      accessTokenData.jti,
+    );
+
     return {
-      accessToken: await this.tokenService.generateAccessToken(userId, roleId),
-      refreshToken: await this.tokenService.generateRefreshToken(
-        userId,
-        roleId,
-      ),
+      accessToken: accessTokenData.token,
+      refreshToken: refreshTokenData.token,
+      jti: accessTokenData.jti,
     };
   }
 
@@ -51,7 +60,18 @@ export class AuthService {
   async signUp(dto: SignUpDto) {
     const user = await this.usersService.create(dto);
     this.logger.log(`Пользователь ${dto.email} зарегистрировался`);
-    return this.generateTokenPair(user.id, user.roleId);
+
+    const token = crypto.randomUUID();
+    await this.usersService.createAccountConfirmation(user.id, token);
+    await this.emailService.sendVerificationEmail(dto.email, token);
+
+    const tokens = await this.generateTokenPair(user.id);
+    await this.sessionsService.create(user.id, tokens.refreshToken, tokens.jti);
+
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
   }
 
   async signIn(dto: SignInDto) {
@@ -67,11 +87,34 @@ export class AuthService {
       throw new UnauthorizedException(this.i18n.t('errors.unauthorized'));
     }
 
-    const tokens = await this.generateTokenPair(user.id, user.roleId);
-    await this.sessionsService.create(user.id, tokens.refreshToken);
+    const tokens = await this.generateTokenPair(user.id);
+    await this.sessionsService.create(user.id, tokens.refreshToken, tokens.jti);
 
     this.logger.log(`Пользователь ${dto.email} успешно вошел в систему`);
-    return tokens;
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
+  }
+
+  async forgotPassword(dto: ForgotPasswordDto) {
+    const user = await this.usersService.findOneByEmail(dto.email);
+    const token = crypto.randomUUID();
+    await this.usersService.createPasswordReset(user.id, token);
+    await this.emailService.sendForgotPasswordEmail(user.email, token);
+    return { success: true };
+  }
+
+  async resetPassword(token: string, dto: ResetPasswordDto) {
+    const user = await this.usersService.findOneByPasswordResetToken(token);
+    if (!user) {
+      throw new BadRequestException(
+        this.i18n.t('errors.password.invalidToken'),
+      );
+    }
+    await this.usersService.resetPassword(token, dto);
+    await this.sessionsService.deleteAllUserSessions(user.id);
+    return { success: true };
   }
 
   async refresh(refreshToken?: string) {
@@ -80,15 +123,21 @@ export class AuthService {
     }
 
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
-    const session = await this.sessionsService.validateSession(refreshToken);
 
     await this.sessionsService.deleteSession(refreshToken);
 
-    const tokens = await this.generateTokenPair(payload.id, payload.roleId);
-    await this.sessionsService.create(payload.id, tokens.refreshToken);
+    const tokens = await this.generateTokenPair(payload.id);
+    await this.sessionsService.create(
+      payload.id,
+      tokens.refreshToken,
+      tokens.jti,
+    );
 
     this.logger.log(`Обновлен токен для пользователя ${payload.id}`);
-    return tokens;
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
   }
 
   async signOut(refreshToken: string, fullLogout: boolean = false) {
@@ -105,6 +154,52 @@ export class AuthService {
       await this.sessionsService.deleteSession(refreshToken);
       this.logger.log(`Пользователь ${session.userId} вышел из текущей сессии`);
     }
+  }
+
+  async verifyEmail(
+    token: string,
+  ): Promise<{ success: boolean; userId?: string }> {
+    const currentDate = new Date();
+
+    const verification = await this.prisma.accountConfirmation.findFirst({
+      where: {
+        token,
+        expiresAt: { gt: currentDate },
+      },
+    });
+
+    if (!verification) {
+      throw new BadRequestException(this.i18n.t('errors.email.invalidToken'));
+    }
+
+    await this.prisma.accountConfirmation.delete({
+      where: { id: verification.id },
+    });
+
+    const user = await this.usersService.findOneById(verification.userId);
+    const role = await this.prisma.role.findFirst({
+      where: {
+        name: RoleEnum.User,
+      },
+    });
+    await this.usersService.update(user.id, {
+      roleId: role.id,
+    });
+
+    return { success: true };
+  }
+
+  async resendVerificationEmail(userId: string) {
+    const user = await this.usersService.findOneById(userId);
+    if (user.role.name === RoleEnum.User) {
+      throw new BadRequestException(
+        this.i18n.t('errors.email.alreadyVerified'),
+      );
+    }
+    const token = crypto.randomUUID();
+    await this.usersService.updateAccountConfirmation(user.id, token);
+    await this.emailService.sendVerificationEmail(user.email, token);
+    return { success: true };
   }
 
   private async setTokenCookie(

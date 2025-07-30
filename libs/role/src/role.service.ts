@@ -1,15 +1,12 @@
 import {
   ConflictException,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
-import { PermissionService } from '@app/permissions';
 import { RoleRepository } from './role.repository';
 import { RoleCreateDto } from './dto/role-create.dto';
 import { RoleUpdateDto } from './dto/role-update.dto';
-import { PERMISSION_SERVICE } from '@app/common/constants/providers.const';
 import { RoleSearchDto } from './dto/role-search.dto';
 
 @Injectable()
@@ -17,8 +14,6 @@ export class RoleService {
   constructor(
     private readonly roleRepository: RoleRepository,
     private readonly i18n: I18nService,
-    @Inject(PERMISSION_SERVICE)
-    private readonly permissionService: PermissionService,
   ) {}
 
   async delete(id: string) {
@@ -39,26 +34,11 @@ export class RoleService {
   }
 
   async update(id: string, dto: RoleUpdateDto) {
-    if (dto.permissions.length) {
-      await Promise.all(
-        dto.permissions.map((permission) =>
-          this.permissionService.ensureExistsById(permission),
-        ),
-      );
-    }
     await this.ensureExistsById(id);
-    await this.ensureExistsByName(dto.name, id);
     return this.roleRepository.update(id, dto);
   }
 
   async create(dto: RoleCreateDto) {
-    if (dto.permissions.length) {
-      await Promise.all(
-        dto.permissions.map((permission) =>
-          this.permissionService.ensureExistsById(permission),
-        ),
-      );
-    }
     await this.ensureExistsByName(dto.name);
     return this.roleRepository.create(dto);
   }

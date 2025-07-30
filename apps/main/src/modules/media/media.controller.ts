@@ -1,6 +1,5 @@
 import { MediaService } from '@app/media';
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -12,9 +11,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { MediaType } from '@prisma/client';
 import { fileFilter } from './helpers/file.filter';
-import { MediaCreateDto } from '@app/media/dto/media.create.dto';
 import { JwtAuthGuard } from '@app/common/guards/auth.guard';
 
 @Controller('media')
@@ -40,10 +37,6 @@ export class MediaController {
           type: 'string',
           format: 'binary',
         },
-        type: {
-          type: 'string',
-          enum: Object.values(MediaType),
-        },
       },
     },
   })
@@ -52,11 +45,8 @@ export class MediaController {
       fileFilter: fileFilter,
     }),
   )
-  async upload(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: MediaCreateDto,
-  ) {
-    return this.mediaService.upload(file, body.type);
+  async upload(@UploadedFile() file: Express.Multer.File) {
+    return this.mediaService.upload(file);
   }
 
   @ApiBearerAuth()

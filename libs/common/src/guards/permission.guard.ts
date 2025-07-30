@@ -2,51 +2,47 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
-  Inject,
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { I18nService } from 'nestjs-i18n';
-import { User } from '../types/user';
-import { PermissionEnum } from '../constants/permission.enum';
-import { PermissionService } from 'libs/permissions/src';
-import { PERMISSION_SERVICE } from '../constants/providers.const';
 import { JwtPayload } from '../types/jwt-payload';
-import { Permission } from '../types/permission';
+import { RoleService } from '@app/role';
+import { Role } from '@prisma/client';
+import { RoleEnum } from '../constants/roles.enum';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    @Inject(PERMISSION_SERVICE)
-    private readonly permissionService: PermissionService,
     private readonly i18n: I18nService,
+    private readonly roleService: RoleService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredPermissions = this.getRequiredPermissions(context);
+    const requiredRoles = this.getRequiredRole(context);
 
-    if (this.shouldSkipPermissionCheck(requiredPermissions)) {
+    if (this.shouldSkipRoleCheck(requiredRoles)) {
       return true;
     }
 
     const payload = this.extractUserPayload(context);
-    const permissions = await this.getUserPermissions(payload.roleId);
+    const role = await this.roleService.findOneById(payload.roleId);
 
-    await this.validatePermissions(permissions, requiredPermissions);
+    await this.validateRole(role, requiredRoles);
 
     return true;
   }
 
-  private getRequiredPermissions(context: ExecutionContext): PermissionEnum[] {
-    return this.reflector.getAllAndOverride<PermissionEnum[]>('permissions', [
+  private getRequiredRole(context: ExecutionContext): RoleEnum[] {
+    return this.reflector.getAllAndOverride<RoleEnum[]>('roles', [
       context.getHandler(),
       context.getClass(),
     ]);
   }
 
-  private shouldSkipPermissionCheck(permissions: PermissionEnum[]): boolean {
-    return !permissions || permissions.length === 0;
+  private shouldSkipRoleCheck(roles: RoleEnum[]): boolean {
+    return !roles || roles.length === 0;
   }
 
   private extractUserPayload(context: ExecutionContext): JwtPayload {
@@ -54,23 +50,13 @@ export class PermissionGuard implements CanActivate {
     return user;
   }
 
-  private async getUserPermissions(roleId: string): Promise<Permission[]> {
-    try {
-      return await this.permissionService.findManyByRoleId(roleId);
-    } catch (error) {
-      throw new ForbiddenException(this.i18n.t('errors.accessDenied'));
-    }
-  }
-
-  private async validatePermissions(
-    userPermissions: Permission[],
-    requiredPermissions: PermissionEnum[],
+  private async validateRole(
+    userRole: Role,
+    requiredRoles: RoleEnum[],
   ): Promise<void> {
-    const hasAllPermissions = requiredPermissions.every((permission) =>
-      userPermissions.some((p) => p.name === permission),
-    );
+    const hasRole = requiredRoles.includes(userRole.name as RoleEnum);
 
-    if (!hasAllPermissions) {
+    if (!hasRole) {
       throw new ForbiddenException(this.i18n.t('errors.accessDenied'));
     }
   }

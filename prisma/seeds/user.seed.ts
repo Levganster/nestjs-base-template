@@ -1,4 +1,4 @@
-import { BaseRoleEnum } from '../../libs/common/src/constants/base-roles.enum';
+import { RoleEnum } from '../../libs/common/src/constants/roles.enum';
 import { PrismaClient } from '@prisma/client';
 
 export const seedUser = async (prisma: PrismaClient) => {
@@ -8,7 +8,12 @@ export const seedUser = async (prisma: PrismaClient) => {
       password: '$2a$04$3EuFgtfrKleWTT2lHiioTOfk7d6r0vz.B.Scf4rKGEaJSQ6bfiFBi',
       role: {
         connect: {
-          name: BaseRoleEnum.Admin,
+          name: RoleEnum.Admin,
+        },
+      },
+      person: {
+        create: {
+          name: 'Admin',
         },
       },
     },

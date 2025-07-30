@@ -1,6 +1,6 @@
 export * from './base/pagination.dto';
 
-export * from './constants/permission.enum';
+export * from './constants/roles.enum';
 
 export * from './decorators/decode-user.decorator';
 export * from './decorators/permissions.decorator';

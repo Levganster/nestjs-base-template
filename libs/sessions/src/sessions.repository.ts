@@ -5,12 +5,18 @@ import { PrismaService } from '@app/prisma/prisma.service';
 export class SessionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId: string, refreshToken: string) {
+  async create(userId: string, refreshToken: string, jti?: string) {
+    const data: any = {
+      userId,
+      refreshToken,
+    };
+
+    if (jti) {
+      data.jti = jti;
+    }
+
     return this.prisma.session.create({
-      data: {
-        userId,
-        refreshToken,
-      },
+      data,
     });
   }
 
@@ -23,6 +29,13 @@ export class SessionsRepository {
   async findByRefreshToken(refreshToken: string) {
     return this.prisma.session.findFirst({
       where: { refreshToken },
+      include: { user: true },
+    });
+  }
+
+  async findByJti(jti: string) {
+    return this.prisma.session.findFirst({
+      where: { jti },
       include: { user: true },
     });
   }

@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { PermissionEnum } from '../constants/permission.enum';
+import { RoleEnum } from '../constants/roles.enum';
 
-export const HasPermissions = (...permissions: PermissionEnum[]) =>
-  SetMetadata('permissions', permissions);
+export const HasPermissions = (...roles: RoleEnum[]) =>
+  SetMetadata('roles', roles);
